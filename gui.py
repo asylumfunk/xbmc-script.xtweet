@@ -99,7 +99,7 @@ class gui:
 	"""
 	def alertStatusEmpty( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_Empty_Title" ), self.lang.get( "Tweet_Alert_Empty_Text" ) )
+		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_Empty_Text" ) )
 
 	"""
 	Description:
@@ -107,7 +107,7 @@ class gui:
 	"""
 	def alertStatusNotUpdated( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_StatusNotUpdated_Title" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text1" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text2" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text3" ) )
+		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text1" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text2" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text3" ) )
 
 	"""
 	Description:
@@ -115,7 +115,7 @@ class gui:
 	"""
 	def alertStatusSuccessfullyUpdated( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_Success_Title" ), self.lang.get( "Tweet_Alert_Success_Text" ) )
+		dialog.ok( self.lang.get( "Success" ), self.lang.get( "Tweet_Alert_Success_Text" ) )
 
 	"""
 	Description:
@@ -123,7 +123,7 @@ class gui:
 	"""
 	def alertStatusTooLong( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_TooLong_Title" ), self.lang.get( "Tweet_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
+		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
 
 	"""
 	Description:
