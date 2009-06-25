@@ -14,7 +14,12 @@
 	<string key="MainMenu_Options_UpdateWithVideo">Tweet about this video?</string>
 	<string key="Message_Alert_Empty_Title">Warning</string>
 	<string key="Message_Alert_Empty_Text">Your message cannot be empty.</string>
+	<string key="Message_Alert_NotSent1">Your message could not be sent.</string>
+	<string key="Message_Alert_NotSent2">Check your username/password combination</string>
+	<string key="Message_Alert_NotSent3">and Internet connection.</string>
+	<string key="Message_Alert_SentSuccessfully">You message was successfully sent.</string>
 	<string key="Message_Alert_TooLong_Text">Your message cannot exceed {0} characters.</string>
+	<string key="Success">Success</string>
 	<string key="Tweet_EnterStatus">What are you doing?</string>
 	<string key="Tweet_Alert_Empty_Title">Warning</string>
 	<string key="Tweet_Alert_Empty_Text">Your status cannot be empty.</string>

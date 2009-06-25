@@ -220,7 +220,13 @@ class gui:
 			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ).replace( "{0}", screenName ) )
 			if message is not None:
 				break
-		return self.api.PostDirectMessage( screenName, message )
+		try:
+			self.api.PostDirectMessage( screenName, message )
+			self.alertMessageSuccessfullySent()
+			return True
+		except:
+			self.alertMessageNotSent()
+			return False
 
 	"""
 	Description:
@@ -345,6 +351,14 @@ class gui:
 	def alertMessageEmpty( self ):
 		dialog = xbmcgui.Dialog()
 		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_Empty_Text" ) )
+
+	def alertMessageNotSent( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_NotSent1" ), self.lang.get( "Message_Alert_NotSent2" ), self.lang.get( "Message_Alert_NotSent3" ) )
+
+	def alertMessageSuccessfullySent( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Success" ), self.lang.get( "Message_Alert_SentSuccessfully" ) )
 
 	"""
 	Description:
