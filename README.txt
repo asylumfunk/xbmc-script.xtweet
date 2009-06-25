@@ -1,4 +1,4 @@
-xTweet, v1.0
+xTweet, v1.1
 by asylumfunk, https://github.com/asylumfunk
 https://github.com/asylumfunk/xbmc-xtweet
 =================================================
@@ -13,11 +13,14 @@ Installation:
 Use:
 	- When you first run the script, it will ask for your Twitter username and password.
 		- Note: You can always update this later with the "Edit account settings" option on the main menu.
-	- From the main menu, you can either tweet automatically about the song/video that you have playing
-		or you can enter in a status yourself.
+	- From the main menu, you can...
+		- tweet automatically about the song/video that you have playing
+		- enter in a status yourself
+		- send a Direct Message to another user
+		- edit your account settings
 
 Coming Soon:
-	- the ability to search Twitter, view timelines, and direct messages
+	- the ability to search Twitter, view timelines, and full support for direct messages
 
 Support:
 	- @asylumfunk

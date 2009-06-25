@@ -1,4 +1,15 @@
 <changelog project="xTweet" url="https://github.com/asylumfunk/xbmc-xtweet">
+	<release date="2009/06/25">
+		<version>
+			<major>1</major>
+			<minor>1</minor>
+		</version>
+		<changes>
+			<change type="add">sending direct messages</change>
+			<change type="edit">new project logo thanks to www.noper.ro</change>
+			<change type="edit">internal: cleaned up some of the menu code</change>
+		</changes>
+	</release>
 	<release date="2009/06/23">
 		<version>
 			<major>1</major>
