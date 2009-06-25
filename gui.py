@@ -50,6 +50,7 @@ class gui:
 			, self.lang.get( "MainMenu_Options_Exit" )
 		]
 		self.version = sys.modules[ "__main__" ].__version__
+		self.ApplicationNameWithVersion = self.lang.get( "ApplicationName" ) + ", v" + self.version
 
 	"""
 	Description:
@@ -74,29 +75,26 @@ class gui:
 			options = self.menuOptions
 			audioIsPlaying = self.player.isPlayingAudio()
 			videoIsPlaying = self.player.isPlayingVideo()
-			mediaIsPlaying = audioIsPlaying or videoIsPlaying
 			if audioIsPlaying:
 				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithAudio" ) )
 			elif videoIsPlaying:
 				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithVideo" ) )
-			choice = menu.select( self.lang.get( "ApplicationName" ) + ", v" + self.version, options )
-			print str(choice)
-			if mediaIsPlaying:
+			choice = menu.select( self.ApplicationNameWithVersion, options )
+			if audioIsPlaying or videoIsPlaying:
 				options.pop( 0 )
-			elif choice < 0:
-				break
-			else:
-				choice = choice + 1
-			if choice == 0:
-				self.tweetWhatImDoing()
-			elif choice == 1:
-				self.tweetManually()
-			elif choice == 2:
-				self.editCredentials()
-			elif choice == 3:
-				self.about()
-			else:
-				break
+			if choice >= 0:
+				action = self.menuOptions[ choice ]
+				if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
+					action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
+					self.tweetWhatImDoing()
+				elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
+					self.tweetManually()
+				elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
+					self.editCredentials()
+				elif action == self.lang.get( "MainMenu_Options_About" ):
+					self.about()
+				else:
+					break
 
 	"""
 	Description:
