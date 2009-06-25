@@ -63,6 +63,70 @@ class gui:
 
 	"""
 	Description:
+		Alerts the user that their message cannot be empty
+	"""
+	def alertMessageEmpty( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_Empty_Text" ) )
+
+	"""
+	Description:
+		Alerts the user that their message could not be sent
+	"""
+	def alertMessageNotSent( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_NotSent1" ), self.lang.get( "Message_Alert_NotSent2" ), self.lang.get( "Message_Alert_NotSent3" ) )
+
+	"""
+	Description:
+		Alerts the user that their message was successfully sent
+	"""
+	def alertMessageSuccessfullySent( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Success" ), self.lang.get( "Message_Alert_SentSuccessfully" ) )
+
+	"""
+	Description:
+		Alerts the user that their message cannot exceed the maximum length
+	"""
+	def alertMessageTooLong( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
+
+	"""
+	Description:
+		Alerts the user that their status cannot be empty
+	"""
+	def alertStatusEmpty( self ):
+		dialog = xbmcgui.Dialog()
+		dialog.ok( self.lang.get( "Tweet_Alert_Empty_Title" ), self.lang.get( "Tweet_Alert_Empty_Text" ) )
+
+	"""
+	Description:
+		Alerts the user that their status could not be updated
+	"""
+	def alertStatusNotUpdated( self ):
+		dialog = xbmcgui.Dialog()
+		dialog.ok( self.lang.get( "Tweet_Alert_StatusNotUpdated_Title" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text1" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text2" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text3" ) )
+
+	"""
+	Description:
+		Alerts the user that their status was successfully updated
+	"""
+	def alertStatusSuccessfullyUpdated( self ):
+		dialog = xbmcgui.Dialog()
+		dialog.ok( self.lang.get( "Tweet_Alert_Success_Title" ), self.lang.get( "Tweet_Alert_Success_Text" ) )
+
+	"""
+	Description:
+		Alerts the user that their status cannot exceed the maximum length
+	"""
+	def alertStatusTooLong( self ):
+		dialog = xbmcgui.Dialog()
+		dialog.ok( self.lang.get( "Tweet_Alert_TooLong_Title" ), self.lang.get( "Tweet_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
+
+	"""
+	Description:
 		Displays the script's main menu
 		Serves as the driver
 	"""
@@ -343,59 +407,3 @@ class gui:
 		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ).replace( "{0}", title )
 		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
 		return self.tweet( message )
-
-	"""
-	Description:
-		Alerts the user that their message cannot be empty
-	"""
-	def alertMessageEmpty( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_Empty_Text" ) )
-
-	def alertMessageNotSent( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_NotSent1" ), self.lang.get( "Message_Alert_NotSent2" ), self.lang.get( "Message_Alert_NotSent3" ) )
-
-	def alertMessageSuccessfullySent( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Success" ), self.lang.get( "Message_Alert_SentSuccessfully" ) )
-
-	"""
-	Description:
-		Alerts the user that their message cannot exceed the maximum length
-	"""
-	def alertMessageTooLong( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
-
-	"""
-	Description:
-		Alerts the user that their status cannot be empty
-	"""
-	def alertStatusEmpty( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_Empty_Title" ), self.lang.get( "Tweet_Alert_Empty_Text" ) )
-
-	"""
-	Description:
-		Alerts the user that their status cannot exceed the maximum length
-	"""
-	def alertStatusTooLong( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_TooLong_Title" ), self.lang.get( "Tweet_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
-
-	"""
-	Description:
-		Alerts the user that their status could not be updated
-	"""
-	def alertStatusNotUpdated( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_StatusNotUpdated_Title" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text1" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text2" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text3" ) )
-
-	"""
-	Description:
-		Alerts the user that their status was successfully updated
-	"""
-	def alertStatusSuccessfullyUpdated( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Tweet_Alert_Success_Title" ), self.lang.get( "Tweet_Alert_Success_Text" ) )
