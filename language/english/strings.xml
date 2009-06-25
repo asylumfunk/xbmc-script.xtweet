@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+	<string key="ApplicationName">xTweet</string>
+	<string key="EnterPassword">Please enter your Twitter password:</string>
+	<string key="EnterUsername">Please enter your Twitter username:</string>
+	<string key="MainMenu_Options_About">About the author</string>
+	<string key="MainMenu_Options_EditAccount">Edit account settings</string>
+	<string key="MainMenu_Options_Exit">Exit</string>
+	<string key="MainMenu_Options_UpdateManually">Update your status</string>
+	<string key="MainMenu_Options_UpdateWithAudio">Tweet about this song?</string>
+	<string key="MainMenu_Options_UpdateWithVideo">Tweet about this video?</string>
+	<string key="Tweet_EnterStatus">What are you doing?</string>
+	<string key="Tweet_Alert_Empty_Title">Warning</string>
+	<string key="Tweet_Alert_Empty_Text">Your status cannot be empty.</string>
+	<string key="Tweet_Alert_StatusNotUpdated_Title">Warning</string>
+	<string key="Tweet_Alert_StatusNotUpdated_Text1">Your status could not be updated.</string>
+	<string key="Tweet_Alert_StatusNotUpdated_Text2">Check your username/password combination</string>
+	<string key="Tweet_Alert_StatusNotUpdated_Text3">and Internet connection.</string>
+	<string key="Tweet_Alert_Success_Title">Success</string>
+	<string key="Tweet_Alert_Success_Text">Your status has been successfully updated.</string>
+	<string key="Tweet_Alert_TooLong_Title">Warning</string>
+	<string key="Tweet_Alert_TooLong_Text">Your status cannot exceed {0} characters.</string>
+	<string key="TweetMusic_MessageFormat">listening to {0} - {1}</string>
+	<string key="TweetVideo_MessageFormat">watching {0}</string>
+</strings>
