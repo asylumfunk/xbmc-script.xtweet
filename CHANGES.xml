@@ -6,7 +6,7 @@
 		</version>
 		<changes>
 			<change type="add">Created the project itself</change>
-			<change type="add">Full i18n support</change>
+			<change type="add">i18n capabilities, but only English translated for now</change>
 			<change type="add">Ability to add/edit username/password</change>
 			<change type="add">Ability to update status</change>
 			<change type="add">Ability to tweet automatically based on currently playing media</change>

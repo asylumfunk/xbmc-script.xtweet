@@ -45,6 +45,7 @@ class gui:
 		self.player = player = xbmc.Player()
 		self.menuOptions = [
 			self.lang.get( "MainMenu_Options_UpdateManually" )
+			, self.lang.get( "MainMenu_Options_SendDirectMessage" )
 			, self.lang.get( "MainMenu_Options_EditAccount" )
 			, self.lang.get( "MainMenu_Options_About" )
 			, self.lang.get( "MainMenu_Options_Exit" )
@@ -89,6 +90,8 @@ class gui:
 					self.tweetWhatImDoing()
 				elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
 					self.tweetManually()
+				elif action == self.lang.get( "MainMenu_Options_SendDirectMessage" ):
+					self.sendDirectMessage()
 				elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
 					self.editCredentials()
 				elif action == self.lang.get( "MainMenu_Options_About" ):
@@ -146,6 +149,78 @@ class gui:
 			if username != "":
 				return username
 		return None
+
+	"""
+	Description:
+		Prompts the user to enter a screen name
+	Args:
+		title::string (optional) - title prompt to be displayed
+		default::string (optional) - default text to be pre-entered
+		acceptEmpty::bool (optional) - whether or not the prompt should loop if the user enters an empty entry
+	Returns:
+		Accept: the user's input (stripped of surrounding whitespace)
+		Cancel: None
+	"""
+	def promptScreenName( self, title = "", default = "", acceptEmpty = False ):
+		keyboard = xbmc.Keyboard( default, title )
+		while True:
+			keyboard.doModal()
+			if keyboard.isConfirmed():
+				name = keyboard.getText().strip()
+				if name != "" or acceptEmpty:
+					return name
+			else:
+				return None
+
+	"""
+	Description:
+		Prompts the user to enter a message
+		Alerts and loops if the message is too long
+	Args:
+		title::string (optional) - title prompt to be displayed
+		default::string (optional) - default text to be pre-entered
+		acceptEmpty::bool (optional) - whether or not the prompt should loop if the user enters an empty entry
+	Returns:
+		Accept: the user's input (stripped of surrounding whitespace)
+		Cancel: None
+	"""
+	def promptMessage( self, title = "", default = "", acceptEmpty = False ):
+		keyboard = xbmc.Keyboard( default, title )
+		while True:
+			keyboard.doModal()
+			if keyboard.isConfirmed():
+				message = keyboard.getText().strip()
+				if message == "":
+					if acceptEmpty:
+						return message
+					else:
+						self.alertMessageEmpty()
+				elif len( message ) > twitter.CHARACTER_LIMIT:
+					self.alertMessageTooLong()
+				else:
+					return message
+			else:
+				return None
+
+	"""
+	Description:
+		Prompts the user for a screen name and password
+		Sends the message if both fields are completed
+	Returns:
+		Accept: the resulting message
+		Cancel: None
+	"""
+	def sendDirectMessage( self ):
+		screenName = ""
+		message = ""
+		while True:
+			screenName = self.promptScreenName( self.lang.get( "DirectMessage_Send_EnterUsername" ), screenName )
+			if screenName is None:
+				return None
+			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ).replace( "{0}", screenName ) )
+			if message is not None:
+				break
+		return self.api.PostDirectMessage( screenName, message )
 
 	"""
 	Description:
@@ -262,6 +337,22 @@ class gui:
 		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ).replace( "{0}", title )
 		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
 		return self.tweet( message )
+
+	"""
+	Description:
+		Alerts the user that their message cannot be empty
+	"""
+	def alertMessageEmpty( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_Empty_Text" ) )
+
+	"""
+	Description:
+		Alerts the user that their message cannot exceed the maximum length
+	"""
+	def alertMessageTooLong( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
 
 	"""
 	Description:
