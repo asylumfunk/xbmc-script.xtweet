@@ -22,3 +22,7 @@ Coming Soon:
 Support:
 	- @asylumfunk
 	- https://github.com/asylumfunk/xbmc-xtweet
+
+Credits:
+	- The logo for this project was created by noper.
+	- Check out the rest of his work at www.noper.ro

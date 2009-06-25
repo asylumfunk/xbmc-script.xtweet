@@ -5,7 +5,7 @@ This library was updated to remove a call to "os.getlogin()", as it was not supp
 
 The simplejson library (http://simplejson.googlecode.com) is used under the terms of the MIT license and is copyright Bob Ippolito.  See http://simplejson.googlecode.com/svn/trunk/LICENSE.txt for details.
 
-The project icon was provided by Gopal Raju (http://www.productivedreams.com/) without any restrictions.
+The project logo/icon was provided by noper (http://www.noper.ro) for use with this project.
 
 
 This code is made available under the GPLv3 licence and is copyright asylumfunk.
