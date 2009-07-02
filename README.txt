@@ -1,4 +1,4 @@
-xTweet, v1.1
+xTweet, v1.2
 by asylumfunk, https://github.com/asylumfunk
 https://github.com/asylumfunk/xbmc-xtweet
 =================================================
@@ -16,11 +16,13 @@ Use:
 	- From the main menu, you can...
 		- tweet automatically about the song/video that you have playing
 		- enter in a status yourself
+		- view your friends timeline
+		- @reply to Tweets
 		- send a Direct Message to another user
 		- edit your account settings
 
 Coming Soon:
-	- the ability to search Twitter, view timelines, and full support for direct messages
+	- the ability to search Twitter, view friends/followers timelines, and full support for direct messages
 
 Support:
 	- @asylumfunk

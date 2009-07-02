@@ -47,3 +47,19 @@ Returns:
 """
 def parseTitleFromFilename( file ):
 		return os.path.splitext( os.path.split( file )[ 1 ] )[ 0 ]
+
+"""
+Description:
+	Strips newline characters from the input string
+Args:
+	text::string - input text
+	[replacementString::string = " "] - string used to replace newlines
+Returns:
+	None if input is None
+	Else, text with all newline instances replaced by the replacement string
+"""
+def stripNewlines( text, replacementString = " " ):
+	if text is None:
+		return text
+	else:
+		return text.replace( "\n", replacementString )

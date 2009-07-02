@@ -18,6 +18,7 @@
 
 #Standard modules
 import sys
+import time
 #Third-party modules
 import twitter
 import xbmc
@@ -42,9 +43,11 @@ class gui:
 		self.username = credentials[ 0 ]
 		self.password = credentials[ 1 ]
 		self.api = twitter.Api( username = self.username, password = self.password )
+		self.api.SetSource( self.lang.get( "ApplicationName" ) )
 		self.player = player = xbmc.Player()
 		self.menuOptions = [
 			self.lang.get( "MainMenu_Options_UpdateManually" )
+			, self.lang.get( "MainMenu_Options_ViewFriendsTimeline" )
 			, self.lang.get( "MainMenu_Options_SendDirectMessage" )
 			, self.lang.get( "MainMenu_Options_EditAccount" )
 			, self.lang.get( "MainMenu_Options_About" )
@@ -154,6 +157,8 @@ class gui:
 					self.tweetWhatImDoing()
 				elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
 					self.tweetManually()
+				elif action == self.lang.get( "MainMenu_Options_ViewFriendsTimeline" ):
+					self.viewFriendsTimeline()
 				elif action == self.lang.get( "MainMenu_Options_SendDirectMessage" ):
 					self.sendDirectMessage()
 				elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
@@ -265,6 +270,25 @@ class gui:
 					return message
 			else:
 				return None
+
+	"""
+	Description:
+		Prompts the user to reply to a status
+	Args:
+		originalStatus::twitter.Status - status to which the user is replying
+	Returns:
+		Success - True
+		Failure - False
+		Cancel - None
+	"""
+	def reply( self, originalStatus ):
+		screenName = originalStatus.GetUser().GetScreenName()
+		message = self.promptMessage( self.lang.get( "Tweet_EnterStatus" ), "@" + screenName + " " )
+		if message is None:
+			return None
+		else:
+			return self.tweet( message )
+
 
 	"""
 	Description:
@@ -407,3 +431,25 @@ class gui:
 		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ).replace( "{0}", title )
 		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
 		return self.tweet( message )
+
+	"""
+	Description:
+		Displays the user's friends timeline
+		This is the default view on the Twitter.com home page.
+	"""
+	def viewFriendsTimeline( self ):
+		displayList = []
+		statuses = self.api.GetFriendsTimeline()
+		for status in statuses:
+			userName = status.GetUser().GetScreenName()
+			text = act.stripNewlines( status.GetText() )
+			created = time.localtime( status.GetCreatedAtInSeconds() )
+			timestamp = time.strftime( self.lang.get( "TimestampFormat" ), created )
+			displayList.append( self.lang.get( "FriendsTimeline_StatusFormat" ) % locals() )
+		while True:
+			dialog = xbmcgui.Dialog()
+			choice = dialog.select( self.lang.get( "FriendsTimeline_Header" ), displayList )
+			if choice < 0:
+				break
+			else:
+				self.reply( statuses[ choice ] )

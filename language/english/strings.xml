@@ -5,6 +5,8 @@
 	<string key="DirectMessage_Send_EnterUsername">Please enter the user's screen name:</string>
 	<string key="EnterPassword">Please enter your Twitter password:</string>
 	<string key="EnterUsername">Please enter your Twitter username:</string>
+	<string key="FriendsTimeline_Header">Friends Timeline</string>
+	<string key="FriendsTimeline_StatusFormat">%(userName)s: %(text)s: %(timestamp)s</string>
 	<string key="MainMenu_Options_About">About the author</string>
 	<string key="MainMenu_Options_EditAccount">Edit account settings</string>
 	<string key="MainMenu_Options_Exit">Exit</string>
@@ -12,6 +14,7 @@
 	<string key="MainMenu_Options_UpdateManually">Update your status</string>
 	<string key="MainMenu_Options_UpdateWithAudio">Tweet about this song?</string>
 	<string key="MainMenu_Options_UpdateWithVideo">Tweet about this video?</string>
+	<string key="MainMenu_Options_ViewFriendsTimeline">View friends timeline</string>
 	<string key="Message_Alert_Empty_Text">Your message cannot be empty.</string>
 	<string key="Message_Alert_NotSent1">Your message could not be sent.</string>
 	<string key="Message_Alert_NotSent2">Check your username/password combination</string>
@@ -19,6 +22,7 @@
 	<string key="Message_Alert_SentSuccessfully">You message was successfully sent.</string>
 	<string key="Message_Alert_TooLong_Text">Your message cannot exceed {0} characters.</string>
 	<string key="Success">Success</string>
+	<string key="TimestampFormat">%Y-%m-%d %H:%M</string>
 	<string key="Tweet_EnterStatus">What are you doing?</string>
 	<string key="Tweet_Alert_Empty_Text">Your status cannot be empty.</string>
 	<string key="Tweet_Alert_StatusNotUpdated_Text1">Your status could not be updated.</string>
