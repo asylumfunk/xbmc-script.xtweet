@@ -45,14 +45,23 @@ class gui:
 		self.api = twitter.Api( username = self.username, password = self.password )
 		self.api.SetSource( self.lang.get( "ApplicationName" ) )
 		self.player = player = xbmc.Player()
-		self.menuOptions = [
+		self.menuOptions_Main = [
 			self.lang.get( "MainMenu_Options_UpdateManually" )
 			, self.lang.get( "MainMenu_Options_ViewFriendsTimeline" )
-			, self.lang.get( "MainMenu_Options_SendDirectMessage" )
+			, self.lang.get( "MainMenu_Options_DirectMessages" )
 			, self.lang.get( "MainMenu_Options_EditAccount" )
 			, self.lang.get( "MainMenu_Options_About" )
 			, self.lang.get( "MainMenu_Options_Exit" )
 		]
+		self.menuOptions_DirectMessages = [
+			self.lang.get( "Menu_DirectMessages_Compose" )
+			, self.lang.get( "Menu_DirectMessages_Inbox" )
+			, self.lang.get( "Menu_DirectMessages_Sent" )
+		]
+		self.DirectMessageType = {
+			"sent" : 1,
+			"received" : 2
+		}
 		self.version = sys.modules[ "__main__" ].__version__
 		self.ApplicationNameWithVersion = self.lang.get( "ApplicationName" ) + ", v" + self.version
 
@@ -63,6 +72,14 @@ class gui:
 	def about( self ):
 		dialog = xbmcgui.Dialog()
 		dialog.ok( config.About_TagLine, sys.modules[ "__main__" ].__author__, config.About_Url, config.About_Email )
+
+	"""
+	Description:
+		Alerts the user that the Direct Message has been deleted
+	"""
+	def alertDirectMessageDeleted( self ):
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( self.lang.get( "Success" ), self.lang.get( "Message_Alert_DirectMessage_Deleted" ) )
 
 	"""
 	Description:
@@ -130,46 +147,6 @@ class gui:
 
 	"""
 	Description:
-		Displays the script's main menu
-		Serves as the driver
-	"""
-	def displayMainMenu( self ):
-		menu = xbmcgui.Dialog()
-		choice = 0
-		audioIsPlaying = False
-		videoIsPlaying = False
-		mediaIsPlaying = False
-		while choice >= 0:
-			options = self.menuOptions
-			audioIsPlaying = self.player.isPlayingAudio()
-			videoIsPlaying = self.player.isPlayingVideo()
-			if audioIsPlaying:
-				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithAudio" ) )
-			elif videoIsPlaying:
-				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithVideo" ) )
-			choice = menu.select( self.ApplicationNameWithVersion, options )
-			if audioIsPlaying or videoIsPlaying:
-				options.pop( 0 )
-			if choice >= 0:
-				action = self.menuOptions[ choice ]
-				if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
-					action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
-					self.tweetWhatImDoing()
-				elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
-					self.tweetManually()
-				elif action == self.lang.get( "MainMenu_Options_ViewFriendsTimeline" ):
-					self.viewFriendsTimeline()
-				elif action == self.lang.get( "MainMenu_Options_SendDirectMessage" ):
-					self.sendDirectMessage()
-				elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
-					self.editCredentials()
-				elif action == self.lang.get( "MainMenu_Options_About" ):
-					self.about()
-				else:
-					break
-
-	"""
-	Description:
 		Prompts the user for their authentication credentials
 		If the user enters both username and password, the information is saved.
 	"""
@@ -218,6 +195,47 @@ class gui:
 			if username != "":
 				return username
 		return None
+
+	"""
+	Description:
+		Formats the display string for a direct message
+	Args:
+		message::twitter.DirectMessage - the message to be displayed
+		messageType::self.DirectMessageType - "sent" or "received"
+	Returns:
+		string - the properly formatted direct message string
+	"""
+	def formatDirectMessageDisplay( self, message, messageType ):
+		if messageType == self.DirectMessageType[ 'sent' ]:
+			userName = message.GetRecipientScreenName()
+			format = self.lang.get( "DirectMessageDisplayFormat_Sent" )
+		else:
+			userName = message.GetSenderScreenName()
+			format = self.lang.get( "DirectMessageDisplayFormat_Received" )
+		text = act.stripNewlines( message.GetText() )
+		created = time.localtime( message.GetCreatedAtInSeconds() )
+		timestamp = time.strftime( self.lang.get( "TimestampFormat" ), created )
+		return format % locals()
+
+	"""
+		Description:
+			Confirms if the user wants to delete the message.
+			If yes, the message is deleted.
+		Args:
+			message:twitter.DirectMessage - the message pending deletion
+		Returns:
+			Yes - True
+			No - False
+	"""
+	def promptDeleteMessage( self, message ):
+		dialog = xbmcgui.Dialog()
+		sure = dialog.yesno( self.lang.get( "DirectMessage_DeletePrompt_Header" ),
+								self.lang.get( "DirectMessage_DeletePrompt_Line1" ),
+								self.lang.get( "DirectMessage_DeletePrompt_Line2" ) )
+		if sure:
+			self.api.DestroyDirectMessage( message.GetId() )
+			self.alertDirectMessageDeleted()
+		return sure
 
 	"""
 	Description:
@@ -292,11 +310,11 @@ class gui:
 
 	"""
 	Description:
-		Prompts the user for a screen name and password
+		Prompts the user for a screen name and message
 		Sends the message if both fields are completed
 	Returns:
-		Accept: the resulting message
-		Cancel: None
+		Accept: True
+		Cancel: False
 	"""
 	def sendDirectMessage( self ):
 		screenName = ""
@@ -305,9 +323,31 @@ class gui:
 			screenName = self.promptScreenName( self.lang.get( "DirectMessage_Send_EnterUsername" ), screenName )
 			if screenName is None:
 				return None
-			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ).replace( "{0}", screenName ) )
+			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) % screenName )
 			if message is not None:
 				break
+		try:
+			self.api.PostDirectMessage( screenName, message )
+			self.alertMessageSuccessfullySent()
+			return True
+		except:
+			self.alertMessageNotSent()
+			return False
+
+	"""
+	Description:
+		Prompts the user for a message
+		Sends the message if a non-empty message is entered
+	Args:
+		screenName::str - the recipient's screen name
+	Returns:
+		Accept: True
+		Cancel: False
+	"""
+	def sendDirectMessageReply( self, screenName ):
+		message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) % screenName )
+		if message is None:
+				return
 		try:
 			self.api.PostDirectMessage( screenName, message )
 			self.alertMessageSuccessfullySent()
@@ -328,6 +368,138 @@ class gui:
 
 	"""
 	Description:
+		Displays a menu with DirectMessage-related options
+	"""
+	def showMenu_DirectMessages( self ):
+		menu = xbmcgui.Dialog()
+		choice = 0
+		while choice >= 0:
+			options = self.menuOptions_DirectMessages
+			choice = menu.select( self.lang.get( "Menu_DirectMessages_Title" ), options )
+			if choice >= 0:
+				action = self.menuOptions_DirectMessages[ choice ]
+				if action == self.lang.get( "Menu_DirectMessages_Compose" ):
+					self.sendDirectMessage()
+				elif action == self.lang.get( "Menu_DirectMessages_Inbox" ):
+					self.showMenu_DirectMessages_Inbox()
+				elif action == self.lang.get( "Menu_DirectMessages_Sent" ):
+					self.showMenu_DirectMessages_Sent()
+				else:
+					break
+
+	"""
+	Description:
+		- Displays the user's Direct Message inbox
+	"""
+	def showMenu_DirectMessages_Inbox( self ):
+		self.showMenu_DirectMessages_List( self.DirectMessageType[ 'received' ] )
+
+	"""
+	Description:
+		- Displays a list of Direct Messages
+	Args:
+		messageType::self.DirectMessageType - "sent" or "received"
+	"""
+	def showMenu_DirectMessages_List( self, messageType ):
+		dialog = xbmcgui.Dialog()
+		choice = 0
+		while choice >= 0:
+			if messageType == self.DirectMessageType[ 'sent' ]:
+				messages = self.api.GetDirectMessagesSent()
+				header = self.lang.get( "DirectMessageListHeader_Sent" )
+			else:
+				messages = self.api.GetDirectMessages()
+				header = self.lang.get( "DirectMessageListHeader_Received" )
+			displayList = []
+			for message in messages:
+				display = self.formatDirectMessageDisplay( message, messageType )
+				displayList.append( display )
+			choice = dialog.select( header, displayList )
+			if choice < 0 or choice >= len( messages ):
+				break
+			else:
+				self.showMenu_DirectMessages_Selected( messages[ choice ], messageType )
+
+	"""
+	Description:
+		 - Displays options that can be performed on a Direct Message
+	Args:
+		message::twitter.DirectMessage - currently selected message
+		messageType::self.DirectMessageType - "sent" or "received"
+	"""
+	def showMenu_DirectMessages_Selected( self, message, messageType ):
+		if messageType == self.DirectMessageType[ 'sent' ]:
+			replyTo = message.GetRecipientScreenName()
+		else:
+			replyTo = message.GetSenderScreenName()
+		options = [
+			self.lang.get( "Menu_DirectMessages_Selected_Reply" ),
+			self.lang.get( "Menu_DirectMessages_Selected_Delete" )
+		]
+		header = self.lang.get( "Menu_DirectMessages_Selected_HeaderFormat" ) % \
+											self.formatDirectMessageDisplay( message, messageType )
+		dialog = xbmcgui.Dialog()
+		choice = 0
+		while choice >= 0:
+			choice = dialog.select( header, options )
+			if choice >= 0:
+				action = options[ choice ]
+				if action == self.lang.get( "Menu_DirectMessages_Selected_Delete" ):
+					if self.promptDeleteMessage( message ):
+						break
+				elif action == self.lang.get( "Menu_DirectMessages_Selected_Reply" ):
+					self.sendDirectMessageReply( replyTo )
+
+	"""
+	Description:
+		 - Displays the user's Direct Message outbox
+	"""
+	def showMenu_DirectMessages_Sent( self ):
+		self.showMenu_DirectMessages_List( self.DirectMessageType[ 'sent' ] )
+
+	"""
+	Description:
+		Displays the script's main menu
+		Serves as the driver
+	"""
+	def showMenu_Main( self ):
+		menu = xbmcgui.Dialog()
+		choice = 0
+		audioIsPlaying = False
+		videoIsPlaying = False
+		mediaIsPlaying = False
+		while choice >= 0:
+			options = self.menuOptions_Main
+			audioIsPlaying = self.player.isPlayingAudio()
+			videoIsPlaying = self.player.isPlayingVideo()
+			if audioIsPlaying:
+				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithAudio" ) )
+			elif videoIsPlaying:
+				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithVideo" ) )
+			choice = menu.select( self.ApplicationNameWithVersion, options )
+			if choice >= 0:
+				action = options[ choice ]
+				print action
+				if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
+					action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
+					self.tweetWhatImDoing()
+				elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
+					self.tweetManually()
+				elif action == self.lang.get( "MainMenu_Options_ViewFriendsTimeline" ):
+					self.viewFriendsTimeline()
+				elif action == self.lang.get( "MainMenu_Options_DirectMessages" ):
+					self.showMenu_DirectMessages()
+				elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
+					self.editCredentials()
+				elif action == self.lang.get( "MainMenu_Options_About" ):
+					self.about()
+				else:
+					break
+			if audioIsPlaying or videoIsPlaying:
+				options.pop( 0 )
+
+	"""
+	Description:
 		On the first run, user is prompted for their credentials
 		Displays the main menu
 	"""
@@ -337,7 +509,7 @@ class gui:
 			if self.username is None:
 				print "You must log in."
 				return
-		self.displayMainMenu()
+		self.showMenu_Main()
 
 	"""
 	Description:
