@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
 	<string key="ApplicationName">xTweet</string>
-	<string key="DirectMessage_Send_EnterMessage">Please enter a message to send to {0}:</string>
+	<string key="DirectMessage_DeletePrompt_Header">Direct Message: Delete</string>
+	<string key="DirectMessage_DeletePrompt_Line1">Are you sure you want to delete this message?</string>
+	<string key="DirectMessage_DeletePrompt_Line2">This cannot be undone.</string>
+	<string key="DirectMessage_Send_EnterMessage">Please enter a message to send to %s:</string>
 	<string key="DirectMessage_Send_EnterUsername">Please enter the user's screen name:</string>
+	<string key="DirectMessageDisplayFormat_Received">%(userName)s: %(text)s: %(timestamp)s</string>
+	<string key="DirectMessageDisplayFormat_Sent">@%(userName)s: %(text)s: %(timestamp)s</string>
+	<string key="DirectMessageListHeader_Received">Direct Messages: Inbox</string>
+	<string key="DirectMessageListHeader_Sent">Direct Messages: Sent</string>
 	<string key="EnterPassword">Please enter your Twitter password:</string>
 	<string key="EnterUsername">Please enter your Twitter username:</string>
 	<string key="FriendsTimeline_Header">Friends Timeline</string>
@@ -10,11 +17,19 @@
 	<string key="MainMenu_Options_About">About the author</string>
 	<string key="MainMenu_Options_EditAccount">Edit account settings</string>
 	<string key="MainMenu_Options_Exit">Exit</string>
-	<string key="MainMenu_Options_SendDirectMessage">Send a direct message</string>
+	<string key="MainMenu_Options_DirectMessages">Direct Messages</string>
 	<string key="MainMenu_Options_UpdateManually">Update your status</string>
 	<string key="MainMenu_Options_UpdateWithAudio">Tweet about this song?</string>
 	<string key="MainMenu_Options_UpdateWithVideo">Tweet about this video?</string>
 	<string key="MainMenu_Options_ViewFriendsTimeline">View friends timeline</string>
+	<string key="Menu_DirectMessages_Compose">Compose</string>
+	<string key="Menu_DirectMessages_Inbox">Inbox</string>
+	<string key="Menu_DirectMessages_Selected_HeaderFormat">Direct Message: %s</string>
+	<string key="Menu_DirectMessages_Selected_Delete">Delete</string>
+	<string key="Menu_DirectMessages_Selected_Reply">Reply </string>
+	<string key="Menu_DirectMessages_Sent">Sent</string>
+	<string key="Menu_DirectMessages_Title">Direct Messages</string>
+	<string key="Message_Alert_DirectMessage_Deleted">The Direct Message has been deleted.</string>
 	<string key="Message_Alert_Empty_Text">Your message cannot be empty.</string>
 	<string key="Message_Alert_NotSent1">Your message could not be sent.</string>
 	<string key="Message_Alert_NotSent2">Check your username/password combination</string>
