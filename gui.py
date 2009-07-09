@@ -111,7 +111,8 @@ class gui:
 	"""
 	def alertMessageTooLong( self ):
 		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
+		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_TooLong_Text" ) %
+																							{ "maxLength" : twitter.CHARACTER_LIMIT } )
 
 	"""
 	Description:
@@ -143,7 +144,8 @@ class gui:
 	"""
 	def alertStatusTooLong( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_TooLong_Text" ).replace( "{0}", str( twitter.CHARACTER_LIMIT ) ) )
+		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_TooLong_Text" ) %
+																				{ "maxLength" : twitter.CHARACTER_LIMIT } )
 
 	"""
 	Description:
@@ -323,7 +325,8 @@ class gui:
 			screenName = self.promptScreenName( self.lang.get( "DirectMessage_Send_EnterUsername" ), screenName )
 			if screenName is None:
 				return None
-			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) % screenName )
+			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) %
+																				{ 'userName' : screenName } )
 			if message is not None:
 				break
 		try:
@@ -437,7 +440,7 @@ class gui:
 			self.lang.get( "Menu_DirectMessages_Selected_Delete" )
 		]
 		header = self.lang.get( "Menu_DirectMessages_Selected_HeaderFormat" ) % \
-											self.formatDirectMessageDisplay( message, messageType )
+											{ "message" : self.formatDirectMessageDisplay( message, messageType ) }
 		dialog = xbmcgui.Dialog()
 		choice = 0
 		while choice >= 0:
@@ -547,7 +550,7 @@ class gui:
 				if message == "":
 					self.alertStatusEmpty()
 				elif len( message ) > twitter.CHARACTER_LIMIT:
-					self.alertStatusTooLong
+					self.alertStatusTooLong()
 				else:
 					return self.tweet( message )
 			else:
@@ -581,7 +584,7 @@ class gui:
 			song = self.player.getMusicInfoTag()
 		except:
 			return False
-		info = self.lang.get( "TweetMusic_MessageFormat" ).replace( "{0}", song.getArtist() ).replace( "{1}", song.getTitle() )
+		info = self.lang.get( "TweetMusic_MessageFormat" ) % { "artist" : song.getArtist(), "title" : song.getTitle() }
 		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
 		return self.tweet( message )
 
@@ -599,7 +602,7 @@ class gui:
 		title = video.getTitle()
 		if title == "":
 			title = act.parseTitleFromFilename( self.player.getPlayingFile() )
-		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ).replace( "{0}", title )
+		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ) % { "title" : title }
 		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
 		return self.tweet( message )
 
