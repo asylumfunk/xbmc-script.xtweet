@@ -479,7 +479,6 @@ class gui:
 			choice = menu.select( self.ApplicationNameWithVersion, options )
 			if choice >= 0:
 				action = options[ choice ]
-				print action
 				if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
 					action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
 					self.tweetWhatImDoing()
