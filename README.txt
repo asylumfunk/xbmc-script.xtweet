@@ -1,4 +1,4 @@
-xTweet, v1.2
+xTweet, v1.3
 by asylumfunk, https://github.com/asylumfunk
 https://github.com/asylumfunk/xbmc-xtweet
 =================================================
@@ -15,10 +15,12 @@ Use:
 		- Note: You can always update this later with the "Edit account settings" option on the main menu.
 	- From the main menu, you can...
 		- tweet automatically about the song/video that you have playing
-		- enter in a status yourself
-		- view your friends timeline
+		- enter a status manually
+		- view your Friends Timeline
 		- @reply to Tweets
 		- send a Direct Message to another user
+		- view the Direct Messages you have sent and received
+		- reply to Direct Messages
 		- edit your account settings
 
 Coming Soon:
@@ -28,6 +30,12 @@ Support:
 	- @asylumfunk
 	- https://github.com/asylumfunk/xbmc-xtweet
 
-Credits:
+Supported Languages (author in parenthesis):
+	- English (AsylumFunk)
+	- German (pt-1)
+
+If your native language isn't supported yet and you'd like to help out with translation, I'd love to hear from you! My goal is to see xTweet available in as many languages as possible.
+
+Additional Credits:
 	- The logo for this project was created by noper.
 	- Check out the rest of his work at www.noper.ro

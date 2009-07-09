@@ -2,6 +2,7 @@ NOTICE
 
 The python-twitter library (http://code.google.com/p/python-twitter/) is used under the terms of the Apache license and is copyright DeWitt Clinton.  See http://python-twitter.googlecode.com/svn/trunk/LICENSE for details.
 This library was updated to remove a call to "os.getlogin()", as it was not supported under Windows.
+This library was also updated to add a missing API method: GetDirectMessagesSent(...)
 
 The simplejson library (http://simplejson.googlecode.com) is used under the terms of the MIT license and is copyright Bob Ippolito.  See http://simplejson.googlecode.com/svn/trunk/LICENSE.txt for details.
 

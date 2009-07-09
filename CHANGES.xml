@@ -1,4 +1,17 @@
 <changelog project="xTweet" url="https://github.com/asylumfunk/xbmc-xtweet">
+	<release date="2009/07/09">
+		<version>
+			<major>1</major>
+			<minor>3</minor>
+		</version>
+		<changes>
+			<change type="add">Direct Message Inbox</change>
+			<change type="add">Direct Messages Sent</change>
+			<change type="add">Direct Message Reply</change>
+			<change type="add">German translation, thanks to pt-1</string>
+			<change type="fix">issue blowing up the &quot;tweet about this song or video&quot; option</change>
+		</changes>
+	</release>
 	<release date="2009/07/02">
 		<version>
 			<major>1</major>

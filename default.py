@@ -29,7 +29,7 @@ __author__ = "asylumfunk"
 __author_url__ = "https://github.com/asylumfunk"
 __scriptname__ = "xTweet"
 __url__ = "https://github.com/asylumfunk/xbmc-xtweet"
-__version__ = "1.2"
+__version__ = "1.3"
 
 #Only start the gui if this module is executed directly
 if __name__ == "__main__":
