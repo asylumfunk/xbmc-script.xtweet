@@ -18,6 +18,8 @@
 	<string key="MainMenu_Options_EditAccount">Veraendere Einstellungen</string>
 	<string key="MainMenu_Options_Exit">Verlassen</string>
 	<string key="MainMenu_Options_DirectMessages">Direkte Nachrichten</string>
+	<string key="MainMenu_Options_Followers">Followers</string>
+	<string key="MainMenu_Options_Following">Following</string>
 	<string key="MainMenu_Options_UpdateManually">Erneuere deinen Status</string>
 	<string key="MainMenu_Options_UpdateWithAudio">Tweet ueber diese Lied?</string>
 	<string key="MainMenu_Options_UpdateWithVideo">Tweet ueber dieses Video?</string>

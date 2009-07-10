@@ -18,6 +18,8 @@
 	<string key="MainMenu_Options_EditAccount">Edit account settings</string>
 	<string key="MainMenu_Options_Exit">Exit</string>
 	<string key="MainMenu_Options_DirectMessages">Direct Messages</string>
+	<string key="MainMenu_Options_Followers">Followers</string>
+	<string key="MainMenu_Options_Following">Following</string>
 	<string key="MainMenu_Options_UpdateManually">Update your status</string>
 	<string key="MainMenu_Options_UpdateWithAudio">Tweet about this song?</string>
 	<string key="MainMenu_Options_UpdateWithVideo">Tweet about this video?</string>

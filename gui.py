@@ -48,6 +48,8 @@ class gui:
 		self.menuOptions_Main = [
 			self.lang.get( "MainMenu_Options_UpdateManually" )
 			, self.lang.get( "MainMenu_Options_ViewFriendsTimeline" )
+			, self.lang.get( "MainMenu_Options_Following" )
+			, self.lang.get( "MainMenu_Options_Followers" )
 			, self.lang.get( "MainMenu_Options_DirectMessages" )
 			, self.lang.get( "MainMenu_Options_EditAccount" )
 			, self.lang.get( "MainMenu_Options_About" )
@@ -61,6 +63,10 @@ class gui:
 		self.DirectMessageType = {
 			"sent" : 1,
 			"received" : 2
+		}
+		self.UsersListType = {
+			"following" : 1,
+			"followers" : 2
 		}
 		self.version = sys.modules[ "__main__" ].__version__
 		self.ApplicationNameWithVersion = self.lang.get( "ApplicationName" ) + ", v" + self.version
@@ -495,10 +501,28 @@ class gui:
 					self.editCredentials()
 				elif action == self.lang.get( "MainMenu_Options_About" ):
 					self.about()
+				elif action == self.lang.get( "MainMenu_Options_Following" ):
+					self.showMenu_UsersList( self.UsersListType[ "following" ] )
+				elif action == self.lang.get( "MainMenu_Options_Followers" ):
+					self.showMenu_UsersList( self.UsersListType[ "followers" ] )
 				else:
 					break
 			if audioIsPlaying or videoIsPlaying:
 				options.pop( 0 )
+
+	def showMenu_UsersList( self, listType ):
+		dialog = xbmcgui.Dialog()
+		if listType == self.UsersListType[ "following" ]:
+			users = self.api.GetFriends()
+			header = "Following"
+		else:
+			users = self.api.GetFollowers()
+			header = "Followers"
+		displayList = []
+		for user in users:
+			displayList.append( user.GetScreenName() )
+		dialog.select( header, displayList )
+
 
 	"""
 	Description:
