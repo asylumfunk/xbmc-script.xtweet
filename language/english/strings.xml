@@ -45,6 +45,7 @@
 	<string key="Tweet_Alert_StatusNotUpdated_Text3">and Internet connection.</string>
 	<string key="Tweet_Alert_Success_Text">Your status has been successfully updated.</string>
 	<string key="Tweet_Alert_TooLong_Text">Your status cannot exceed %(maxLength)s characters.</string>
+	<string key="Tweet_Automatic_Suffix">on #XBMC Media Center</string>
 	<string key="TweetMusic_MessageFormat">listening to %(artist)s - %(title)s</string>
 	<string key="TweetVideo_MessageFormat">watching %(title)s</string>
 	<string key="Warning">Warning</string>

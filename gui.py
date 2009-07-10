@@ -585,7 +585,7 @@ class gui:
 		except:
 			return False
 		info = self.lang.get( "TweetMusic_MessageFormat" ) % { "artist" : song.getArtist(), "title" : song.getTitle() }
-		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
+		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT, self.lang.get( "Tweet_Automatic_Suffix" ) )
 		return self.tweet( message )
 
 	"""
@@ -603,7 +603,7 @@ class gui:
 		if title == "":
 			title = act.parseTitleFromFilename( self.player.getPlayingFile() )
 		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ) % { "title" : title }
-		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT )
+		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT, self.lang.get( "Tweet_Automatic_Suffix" ) )
 		return self.tweet( message )
 
 	"""

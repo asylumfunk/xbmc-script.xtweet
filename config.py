@@ -23,7 +23,6 @@ About_TagLine = "Half monkey, half zombie, half amazing"
 About_Email = "@asylumfunk"
 About_Url = "https://github.com/asylumfunk"
 ConfigFile = "settings.ini"
-Status_Footer = "#xTweetNow #xbmc"
 Status_Truncation = "..."
 
 """

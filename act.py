@@ -31,10 +31,10 @@ Args:
 Returns:
 	string : new status (including footer), <= maxLength
 """
-def appendFooterToStatus( message, maxLength ):
-	status = message + " " + config.Status_Footer
+def appendFooterToStatus( message, maxLength, suffix ):
+	status = message + " " + suffix
 	if len( status ) > maxLength:
-		status = message[ 0 : ( maxLength - len( config.Status_Footer ) - len( config.Status_Truncation ) - 1 ) ] + config.Status_Truncation + " " + config.Status_Footer
+		status = message[ 0 : ( maxLength - len( suffix ) - len( config.Status_Truncation ) - 1 ) ] + config.Status_Truncation + " " + suffix
 	return status
 
 """
