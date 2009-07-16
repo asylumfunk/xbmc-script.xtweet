@@ -538,18 +538,22 @@ class gui:
 	"""
 	def showMenu_User( self, user, listType ):
 		userName = user.GetScreenName()
-		if listType == self.UsersListType[ "following" ]:
-			header = self.lang.get( "Menu_User_Header_Following" ) % locals()
-		else:
-			header = self.lang.get( "Menu_User_Header_Follower" ) % locals()
 		optionMention = self.lang.get( "Menu_User_Mention" ) % locals()
 		optionTimeline = self.lang.get( "Menu_User_ViewTimeline" ) % locals()
 		optionDirectMessage = self.lang.get( "Menu_User_DirectMessage" )
-		options = [
-			optionMention
-			, optionTimeline
-			, optionDirectMessage
-		]
+		if listType == self.UsersListType[ "following" ]:
+			header = self.lang.get( "Menu_User_Header_Following" ) % locals()
+			options = [
+				optionMention
+				, optionTimeline
+				, optionDirectMessage
+			]
+		else:
+			header = self.lang.get( "Menu_User_Header_Follower" ) % locals()
+			options = [
+				optionMention
+				, optionDirectMessage
+			]
 		dialog = xbmcgui.Dialog()
 		choice = 0
 		while choice >= 0:
