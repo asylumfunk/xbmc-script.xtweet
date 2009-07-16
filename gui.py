@@ -226,6 +226,23 @@ class gui:
 		return format % locals()
 
 	"""
+	Description:
+		Prompts the user to update their status, mentioning a specified user
+	Args:
+		user::twitter.User - the user being mentioned
+	Returns:
+		Accept:	boolean result flag
+		Cancel: None
+	"""
+	def mention( self, user ):
+		userName = user.GetScreenName()
+		message = self.promptMessage( self.lang.get( "Tweet_EnterStatus" ), self.lang.get( "Mention_Format" ) % locals() )
+		if message is None:
+			return None
+		else:
+			return self.tweet( message )
+
+	"""
 		Description:
 			Confirms if the user wants to delete the message.
 			If yes, the message is deleted.
@@ -353,12 +370,12 @@ class gui:
 		Accept: True
 		Cancel: False
 	"""
-	def sendDirectMessageReply( self, screenName ):
-		message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) % screenName )
+	def sendDirectMessage( self, userName ):
+		message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) % locals() )
 		if message is None:
 				return
 		try:
-			self.api.PostDirectMessage( screenName, message )
+			self.api.PostDirectMessage( userName, message )
 			self.alertMessageSuccessfullySent()
 			return True
 		except:
@@ -457,7 +474,7 @@ class gui:
 					if self.promptDeleteMessage( message ):
 						break
 				elif action == self.lang.get( "Menu_DirectMessages_Selected_Reply" ):
-					self.sendDirectMessageReply( replyTo )
+					self.sendDirectMessage( replyTo )
 
 	"""
 	Description:
@@ -510,19 +527,59 @@ class gui:
 			if audioIsPlaying or videoIsPlaying:
 				options.pop( 0 )
 
+	"""
+	Description:
+		Shows a menu of user-specific options
+	Args:
+		user::twitter.User - the specified user
+		listType::self.UsersListType - signifies the type of user list (following/follower)
+	Returns:
+		None
+	"""
+	def showMenu_User( self, user, listType ):
+		userName = user.GetScreenName()
+		if listType == self.UsersListType[ "following" ]:
+			header = self.lang.get( "Menu_User_Header_Following" ) % locals()
+		else:
+			header = self.lang.get( "Menu_User_Header_Follower" ) % locals()
+		optionMention = self.lang.get( "Menu_User_Mention" ) % locals()
+		optionTimeline = self.lang.get( "Menu_User_ViewTimeline" ) % locals()
+		optionDirectMessage = self.lang.get( "Menu_User_DirectMessage" )
+		options = [
+			optionMention
+			, optionTimeline
+			, optionDirectMessage
+		]
+		dialog = xbmcgui.Dialog()
+		choice = 0
+		while choice >= 0:
+			choice = dialog.select( header, options )
+			if choice >= 0:
+				if options[ choice ] == optionMention:
+					self.mention( user )
+				elif options[ choice ] == optionTimeline:
+					self.viewUserTimeline( user )
+				elif options[ choice ] == optionDirectMessage:
+					self.sendDirectMessage( user.GetScreenName() )
+
 	def showMenu_UsersList( self, listType ):
 		dialog = xbmcgui.Dialog()
 		if listType == self.UsersListType[ "following" ]:
 			users = self.api.GetFriends()
-			header = "Following"
+			header = self.lang.get( "MainMenu_Options_Following" )
 		else:
 			users = self.api.GetFollowers()
-			header = "Followers"
+			header = self.lang.get( "MainMenu_Options_Followers" )
 		displayList = []
 		for user in users:
 			displayList.append( user.GetScreenName() )
-		dialog.select( header, displayList )
-
+		choice = 0
+		while choice >= 0:
+			choice = dialog.select( header, displayList )
+			if choice < 0 or choice >= len( users ):
+				break
+			else:
+				self.showMenu_User( users[ choice ], listType )
 
 	"""
 	Description:
@@ -636,8 +693,12 @@ class gui:
 		This is the default view on the Twitter.com home page.
 	"""
 	def viewFriendsTimeline( self ):
-		displayList = []
+		header = self.lang.get( "FriendsTimeline_Header" )
 		statuses = self.api.GetFriendsTimeline()
+		self.viewTimeline( header, statuses )
+
+	def viewTimeline( self, header, statuses ):
+		displayList = []
 		for status in statuses:
 			userName = status.GetUser().GetScreenName()
 			text = act.stripNewlines( status.GetText() )
@@ -646,8 +707,14 @@ class gui:
 			displayList.append( self.lang.get( "FriendsTimeline_StatusFormat" ) % locals() )
 		while True:
 			dialog = xbmcgui.Dialog()
-			choice = dialog.select( self.lang.get( "FriendsTimeline_Header" ), displayList )
-			if choice < 0:
+			choice = dialog.select( header, displayList )
+			if choice < 0 or choice >= len( statuses ):
 				break
 			else:
 				self.reply( statuses[ choice ] )
+
+	def viewUserTimeline( self, user ):
+		userName = user.GetScreenName()
+		header = self.lang.get( "UserTimeline_Header_Format" ) % locals()
+		statuses = self.api.GetUserTimeline( user.GetScreenName() )
+		self.viewTimeline( header, statuses )
