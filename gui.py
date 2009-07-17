@@ -123,19 +123,20 @@ class gui:
 
 	"""
 	Description:
+		Alerts the user that Twitter.com could not be reached
+	"""
+	def alertServerConnectionFailed( self ):
+		dialog = xbmcgui.Dialog()
+		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Server_ConnectionFailed_Line1" ), self.lang.get( "Server_ConnectionFailed_Line2" ), self.lang.get( "Server_ConnectionFailed_Line3" ) )
+
+
+	"""
+	Description:
 		Alerts the user that their status cannot be empty
 	"""
 	def alertStatusEmpty( self ):
 		dialog = xbmcgui.Dialog()
 		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_Empty_Text" ) )
-
-	"""
-	Description:
-		Alerts the user that their status could not be updated
-	"""
-	def alertStatusNotUpdated( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text1" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text2" ), self.lang.get( "Tweet_Alert_StatusNotUpdated_Text3" ) )
 
 	"""
 	Description:
@@ -516,25 +517,28 @@ class gui:
 			choice = menu.select( self.ApplicationNameWithVersion, options )
 			if choice >= 0:
 				action = options[ choice ]
-				if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
-					action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
-					self.tweetWhatImDoing()
-				elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
-					self.tweetManually()
-				elif action == self.lang.get( "MainMenu_Options_ViewFriendsTimeline" ):
-					self.viewFriendsTimeline()
-				elif action == self.lang.get( "MainMenu_Options_DirectMessages" ):
-					self.showMenu_DirectMessages()
-				elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
-					self.editCredentials()
-				elif action == self.lang.get( "MainMenu_Options_About" ):
-					self.about()
-				elif action == self.lang.get( "MainMenu_Options_Following" ):
-					self.showMenu_UsersList( self.UsersListType[ "following" ] )
-				elif action == self.lang.get( "MainMenu_Options_Followers" ):
-					self.showMenu_UsersList( self.UsersListType[ "followers" ] )
-				else:
-					break
+				try:
+					if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
+						action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
+						self.tweetWhatImDoing()
+					elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
+						self.tweetManually()
+					elif action == self.lang.get( "MainMenu_Options_ViewFriendsTimeline" ):
+						self.viewFriendsTimeline()
+					elif action == self.lang.get( "MainMenu_Options_DirectMessages" ):
+						self.showMenu_DirectMessages()
+					elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
+						self.editCredentials()
+					elif action == self.lang.get( "MainMenu_Options_About" ):
+						self.about()
+					elif action == self.lang.get( "MainMenu_Options_Following" ):
+						self.showMenu_UsersList( self.UsersListType[ "following" ] )
+					elif action == self.lang.get( "MainMenu_Options_Followers" ):
+						self.showMenu_UsersList( self.UsersListType[ "followers" ] )
+					else:
+						break
+				except urllib2.URLError:
+					self.alertServerConnectionFailed()
 			if audioIsPlaying or videoIsPlaying:
 				options.pop( 0 )
 
@@ -621,7 +625,7 @@ class gui:
 			self.alertStatusSuccessfullyUpdated()
 			return True
 		except:
-			self.alertStatusNotUpdated()
+			self.alertServerConnectionFailed()
 			return False
 		#todo: actually confirm
 

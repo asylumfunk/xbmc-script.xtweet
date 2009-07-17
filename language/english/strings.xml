@@ -44,13 +44,13 @@
 	<string key="Message_Alert_NotSent3">and Internet connection.</string>
 	<string key="Message_Alert_SentSuccessfully">You message was successfully sent.</string>
 	<string key="Message_Alert_TooLong_Text">Your message cannot exceed %(maxLength)s characters.</string>
+	<string key="Server_ConnectionFailed_Line1">Twitter could not be reached.</string>
+	<string key="Server_ConnectionFailed_Line2">Check your username/password combination</string>
+	<string key="Server_ConnectionFailed_Line3">and Internet connection.</string>
 	<string key="Success">Success</string>
 	<string key="TimestampFormat">%Y-%m-%d %H:%M</string>
 	<string key="Tweet_EnterStatus">What are you doing?</string>
 	<string key="Tweet_Alert_Empty_Text">Your status cannot be empty.</string>
-	<string key="Tweet_Alert_StatusNotUpdated_Text1">Your status could not be updated.</string>
-	<string key="Tweet_Alert_StatusNotUpdated_Text2">Check your username/password combination</string>
-	<string key="Tweet_Alert_StatusNotUpdated_Text3">and Internet connection.</string>
 	<string key="Tweet_Alert_Success_Text">Your status has been successfully updated.</string>
 	<string key="Tweet_Alert_TooLong_Text">Your status cannot exceed %(maxLength)s characters.</string>
 	<string key="Tweet_Automatic_Suffix">on #XBMC Media Center</string>
