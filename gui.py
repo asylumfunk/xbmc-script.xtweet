@@ -27,7 +27,7 @@ import xbmcgui
 #Project modules
 import act
 import config
-import lang
+from default import i18n
 
 class gui:
 	"""Handles the scripts user interface"""
@@ -39,27 +39,26 @@ class gui:
 		Loads the user's credentials, if they are saved
 	"""
 	def __init__( self ):
-		self.lang = lang.lang()
 		credentials = config.loadCredentials()
 		self.username = credentials[ 0 ]
 		self.password = credentials[ 1 ]
 		self.api = twitter.Api( username = self.username, password = self.password )
-		self.api.SetSource( self.lang.get( "ApplicationName" ) )
+		self.api.SetSource( i18n( "ApplicationName" ) )
 		self.player = player = xbmc.Player()
 		self.menuOptions_Main = [
-			self.lang.get( "MainMenu_Options_UpdateManually" )
-			, self.lang.get( "MainMenu_Options_ViewFriendsTimeline" )
-			, self.lang.get( "MainMenu_Options_Following" )
-			, self.lang.get( "MainMenu_Options_Followers" )
-			, self.lang.get( "MainMenu_Options_DirectMessages" )
-			, self.lang.get( "MainMenu_Options_EditAccount" )
-			, self.lang.get( "MainMenu_Options_About" )
-			, self.lang.get( "MainMenu_Options_Exit" )
+			i18n( "MainMenu_Options_UpdateManually" )
+			, i18n( "MainMenu_Options_ViewFriendsTimeline" )
+			, i18n( "MainMenu_Options_Following" )
+			, i18n( "MainMenu_Options_Followers" )
+			, i18n( "MainMenu_Options_DirectMessages" )
+			, i18n( "MainMenu_Options_EditAccount" )
+			, i18n( "MainMenu_Options_About" )
+			, i18n( "MainMenu_Options_Exit" )
 		]
 		self.menuOptions_DirectMessages = [
-			self.lang.get( "Menu_DirectMessages_Compose" )
-			, self.lang.get( "Menu_DirectMessages_Inbox" )
-			, self.lang.get( "Menu_DirectMessages_Sent" )
+			i18n( "Menu_DirectMessages_Compose" )
+			, i18n( "Menu_DirectMessages_Inbox" )
+			, i18n( "Menu_DirectMessages_Sent" )
 		]
 		self.DirectMessageType = {
 			"sent" : 1,
@@ -70,7 +69,7 @@ class gui:
 			"followers" : 2
 		}
 		self.version = sys.modules[ "__main__" ].__version__
-		self.ApplicationNameWithVersion = self.lang.get( "ApplicationName" ) + ", v" + self.version
+		self.ApplicationNameWithVersion = i18n( "ApplicationName" ) + ", v" + self.version
 
 	"""
 	Description:
@@ -86,7 +85,7 @@ class gui:
 	"""
 	def alertDirectMessageDeleted( self ):
 		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Success" ), self.lang.get( "Message_Alert_DirectMessage_Deleted" ) )
+		return dialog.ok( i18n( "Success" ), i18n( "Message_Alert_DirectMessage_Deleted" ) )
 
 	"""
 	Description:
@@ -94,7 +93,7 @@ class gui:
 	"""
 	def alertMessageEmpty( self ):
 		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_Empty_Text" ) )
+		return dialog.ok( i18n( "Warning" ), i18n( "Message_Alert_Empty_Text" ) )
 
 	"""
 	Description:
@@ -102,7 +101,7 @@ class gui:
 	"""
 	def alertMessageNotSent( self ):
 		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_NotSent1" ), self.lang.get( "Message_Alert_NotSent2" ), self.lang.get( "Message_Alert_NotSent3" ) )
+		return dialog.ok( i18n( "Warning" ), i18n( "Message_Alert_NotSent1" ), i18n( "Message_Alert_NotSent2" ), i18n( "Message_Alert_NotSent3" ) )
 
 	"""
 	Description:
@@ -110,7 +109,7 @@ class gui:
 	"""
 	def alertMessageSuccessfullySent( self ):
 		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Success" ), self.lang.get( "Message_Alert_SentSuccessfully" ) )
+		return dialog.ok( i18n( "Success" ), i18n( "Message_Alert_SentSuccessfully" ) )
 
 	"""
 	Description:
@@ -118,7 +117,7 @@ class gui:
 	"""
 	def alertMessageTooLong( self ):
 		dialog = xbmcgui.Dialog()
-		return dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Message_Alert_TooLong_Text" ) %
+		return dialog.ok( i18n( "Warning" ), i18n( "Message_Alert_TooLong_Text" ) %
 																							{ "maxLength" : twitter.CHARACTER_LIMIT } )
 
 	"""
@@ -127,7 +126,7 @@ class gui:
 	"""
 	def alertServerConnectionFailed( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Server_ConnectionFailed_Line1" ), self.lang.get( "Server_ConnectionFailed_Line2" ), self.lang.get( "Server_ConnectionFailed_Line3" ) )
+		dialog.ok( i18n( "Warning" ), i18n( "Server_ConnectionFailed_Line1" ), i18n( "Server_ConnectionFailed_Line2" ), i18n( "Server_ConnectionFailed_Line3" ) )
 
 
 	"""
@@ -136,7 +135,7 @@ class gui:
 	"""
 	def alertStatusEmpty( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_Empty_Text" ) )
+		dialog.ok( i18n( "Warning" ), i18n( "Tweet_Alert_Empty_Text" ) )
 
 	"""
 	Description:
@@ -144,7 +143,7 @@ class gui:
 	"""
 	def alertStatusSuccessfullyUpdated( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Success" ), self.lang.get( "Tweet_Alert_Success_Text" ) )
+		dialog.ok( i18n( "Success" ), i18n( "Tweet_Alert_Success_Text" ) )
 
 	"""
 	Description:
@@ -152,7 +151,7 @@ class gui:
 	"""
 	def alertStatusTooLong( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_TooLong_Text" ) %
+		dialog.ok( i18n( "Warning" ), i18n( "Tweet_Alert_TooLong_Text" ) %
 																				{ "maxLength" : twitter.CHARACTER_LIMIT } )
 
 	"""
@@ -161,9 +160,9 @@ class gui:
 	"""
 	def alertTimelineProtected( self, user ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( self.lang.get( "UserTimeline_Protected_Header_Format" ) % { 'userName' : user.GetScreenName() },
-					self.lang.get( "UserTimeline_Protected_Line1" ),
-					self.lang.get( "UserTimeline_Protected_Line2" ) )
+		dialog.ok( i18n( "UserTimeline_Protected_Header_Format" ) % { 'userName' : user.GetScreenName() },
+					i18n( "UserTimeline_Protected_Line1" ),
+					i18n( "UserTimeline_Protected_Line2" ) )
 
 	"""
 	Description:
@@ -190,7 +189,7 @@ class gui:
 		Cancel: None
 	"""
 	def editPassword( self ):
-		keyboard = xbmc.Keyboard( "", self.lang.get( "EnterPassword" ), True )
+		keyboard = xbmc.Keyboard( "", i18n( "EnterPassword" ), True )
 		keyboard.doModal()
 		if keyboard.isConfirmed():
 			password = keyboard.getText().strip()
@@ -208,7 +207,7 @@ class gui:
 	def editUsername( self, username = None ):
 		if username is None:
 			username = ""
-		keyboard = xbmc.Keyboard( username, self.lang.get( "EnterUsername" ) )
+		keyboard = xbmc.Keyboard( username, i18n( "EnterUsername" ) )
 		keyboard.doModal()
 		if keyboard.isConfirmed():
 			username = keyboard.getText().strip()
@@ -228,13 +227,13 @@ class gui:
 	def formatDirectMessageDisplay( self, message, messageType ):
 		if messageType == self.DirectMessageType[ 'sent' ]:
 			userName = message.GetRecipientScreenName()
-			format = self.lang.get( "DirectMessageDisplayFormat_Sent" )
+			format = i18n( "DirectMessageDisplayFormat_Sent" )
 		else:
 			userName = message.GetSenderScreenName()
-			format = self.lang.get( "DirectMessageDisplayFormat_Received" )
+			format = i18n( "DirectMessageDisplayFormat_Received" )
 		text = act.stripNewlines( message.GetText() )
 		created = time.localtime( message.GetCreatedAtInSeconds() )
-		timestamp = time.strftime( self.lang.get( "TimestampFormat" ), created )
+		timestamp = time.strftime( i18n( "TimestampFormat" ), created )
 		return format % locals()
 
 	"""
@@ -248,7 +247,7 @@ class gui:
 	"""
 	def mention( self, user ):
 		userName = user.GetScreenName()
-		message = self.promptMessage( self.lang.get( "Tweet_EnterStatus" ), self.lang.get( "Mention_Format" ) % locals() )
+		message = self.promptMessage( i18n( "Tweet_EnterStatus" ), i18n( "Mention_Format" ) % locals() )
 		if message is None:
 			return None
 		else:
@@ -266,9 +265,9 @@ class gui:
 	"""
 	def promptDeleteMessage( self, message ):
 		dialog = xbmcgui.Dialog()
-		sure = dialog.yesno( self.lang.get( "DirectMessage_DeletePrompt_Header" ),
-								self.lang.get( "DirectMessage_DeletePrompt_Line1" ),
-								self.lang.get( "DirectMessage_DeletePrompt_Line2" ) )
+		sure = dialog.yesno( i18n( "DirectMessage_DeletePrompt_Header" ),
+								i18n( "DirectMessage_DeletePrompt_Line1" ),
+								i18n( "DirectMessage_DeletePrompt_Line2" ) )
 		if sure:
 			self.api.DestroyDirectMessage( message.GetId() )
 			self.alertDirectMessageDeleted()
@@ -338,7 +337,7 @@ class gui:
 	"""
 	def reply( self, originalStatus ):
 		screenName = originalStatus.GetUser().GetScreenName()
-		message = self.promptMessage( self.lang.get( "Tweet_EnterStatus" ), "@" + screenName + " " )
+		message = self.promptMessage( i18n( "Tweet_EnterStatus" ), "@" + screenName + " " )
 		if message is None:
 			return None
 		else:
@@ -357,10 +356,10 @@ class gui:
 		screenName = ""
 		message = ""
 		while True:
-			screenName = self.promptScreenName( self.lang.get( "DirectMessage_Send_EnterUsername" ), screenName )
+			screenName = self.promptScreenName( i18n( "DirectMessage_Send_EnterUsername" ), screenName )
 			if screenName is None:
 				return None
-			message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) %
+			message = self.promptMessage( i18n( "DirectMessage_Send_EnterMessage" ) %
 																				{ 'userName' : screenName } )
 			if message is not None:
 				break
@@ -383,7 +382,7 @@ class gui:
 		Cancel: False
 	"""
 	def sendDirectMessage( self, userName ):
-		message = self.promptMessage( self.lang.get( "DirectMessage_Send_EnterMessage" ) % locals() )
+		message = self.promptMessage( i18n( "DirectMessage_Send_EnterMessage" ) % locals() )
 		if message is None:
 				return
 		try:
@@ -413,14 +412,14 @@ class gui:
 		choice = 0
 		while choice >= 0:
 			options = self.menuOptions_DirectMessages
-			choice = menu.select( self.lang.get( "Menu_DirectMessages_Title" ), options )
+			choice = menu.select( i18n( "Menu_DirectMessages_Title" ), options )
 			if choice >= 0:
 				action = self.menuOptions_DirectMessages[ choice ]
-				if action == self.lang.get( "Menu_DirectMessages_Compose" ):
+				if action == i18n( "Menu_DirectMessages_Compose" ):
 					self.sendDirectMessage()
-				elif action == self.lang.get( "Menu_DirectMessages_Inbox" ):
+				elif action == i18n( "Menu_DirectMessages_Inbox" ):
 					self.showMenu_DirectMessages_Inbox()
-				elif action == self.lang.get( "Menu_DirectMessages_Sent" ):
+				elif action == i18n( "Menu_DirectMessages_Sent" ):
 					self.showMenu_DirectMessages_Sent()
 				else:
 					break
@@ -444,10 +443,10 @@ class gui:
 		while choice >= 0:
 			if messageType == self.DirectMessageType[ 'sent' ]:
 				messages = self.api.GetDirectMessagesSent()
-				header = self.lang.get( "DirectMessageListHeader_Sent" )
+				header = i18n( "DirectMessageListHeader_Sent" )
 			else:
 				messages = self.api.GetDirectMessages()
-				header = self.lang.get( "DirectMessageListHeader_Received" )
+				header = i18n( "DirectMessageListHeader_Received" )
 			displayList = []
 			for message in messages:
 				display = self.formatDirectMessageDisplay( message, messageType )
@@ -471,10 +470,10 @@ class gui:
 		else:
 			replyTo = message.GetSenderScreenName()
 		options = [
-			self.lang.get( "Menu_DirectMessages_Selected_Reply" ),
-			self.lang.get( "Menu_DirectMessages_Selected_Delete" )
+			i18n( "Menu_DirectMessages_Selected_Reply" ),
+			i18n( "Menu_DirectMessages_Selected_Delete" )
 		]
-		header = self.lang.get( "Menu_DirectMessages_Selected_HeaderFormat" ) % \
+		header = i18n( "Menu_DirectMessages_Selected_HeaderFormat" ) % \
 											{ "message" : self.formatDirectMessageDisplay( message, messageType ) }
 		dialog = xbmcgui.Dialog()
 		choice = 0
@@ -482,10 +481,10 @@ class gui:
 			choice = dialog.select( header, options )
 			if choice >= 0:
 				action = options[ choice ]
-				if action == self.lang.get( "Menu_DirectMessages_Selected_Delete" ):
+				if action == i18n( "Menu_DirectMessages_Selected_Delete" ):
 					if self.promptDeleteMessage( message ):
 						break
-				elif action == self.lang.get( "Menu_DirectMessages_Selected_Reply" ):
+				elif action == i18n( "Menu_DirectMessages_Selected_Reply" ):
 					self.sendDirectMessage( replyTo )
 
 	"""
@@ -511,29 +510,29 @@ class gui:
 			audioIsPlaying = self.player.isPlayingAudio()
 			videoIsPlaying = self.player.isPlayingVideo()
 			if audioIsPlaying:
-				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithAudio" ) )
+				options.insert( 0, i18n( "MainMenu_Options_UpdateWithAudio" ) )
 			elif videoIsPlaying:
-				options.insert( 0, self.lang.get( "MainMenu_Options_UpdateWithVideo" ) )
+				options.insert( 0, i18n( "MainMenu_Options_UpdateWithVideo" ) )
 			choice = menu.select( self.ApplicationNameWithVersion, options )
 			if choice >= 0:
 				action = options[ choice ]
 				try:
-					if action == self.lang.get( "MainMenu_Options_UpdateWithAudio" ) or \
-						action == self.lang.get( "MainMenu_Options_UpdateWithVideo" ):
+					if action == i18n( "MainMenu_Options_UpdateWithAudio" ) or \
+						action == i18n( "MainMenu_Options_UpdateWithVideo" ):
 						self.tweetWhatImDoing()
-					elif action == self.lang.get( "MainMenu_Options_UpdateManually" ):
+					elif action == i18n( "MainMenu_Options_UpdateManually" ):
 						self.tweetManually()
-					elif action == self.lang.get( "MainMenu_Options_ViewFriendsTimeline" ):
+					elif action == i18n( "MainMenu_Options_ViewFriendsTimeline" ):
 						self.viewFriendsTimeline()
-					elif action == self.lang.get( "MainMenu_Options_DirectMessages" ):
+					elif action == i18n( "MainMenu_Options_DirectMessages" ):
 						self.showMenu_DirectMessages()
-					elif action == self.lang.get( "MainMenu_Options_EditAccount" ):
+					elif action == i18n( "MainMenu_Options_EditAccount" ):
 						self.editCredentials()
-					elif action == self.lang.get( "MainMenu_Options_About" ):
+					elif action == i18n( "MainMenu_Options_About" ):
 						self.about()
-					elif action == self.lang.get( "MainMenu_Options_Following" ):
+					elif action == i18n( "MainMenu_Options_Following" ):
 						self.showMenu_UsersList( self.UsersListType[ "following" ] )
-					elif action == self.lang.get( "MainMenu_Options_Followers" ):
+					elif action == i18n( "MainMenu_Options_Followers" ):
 						self.showMenu_UsersList( self.UsersListType[ "followers" ] )
 					else:
 						break
@@ -553,15 +552,15 @@ class gui:
 	"""
 	def showMenu_User( self, user, listType ):
 		userName = user.GetScreenName()
-		optionMention = self.lang.get( "Menu_User_Mention" ) % locals()
-		optionTimeline = self.lang.get( "Menu_User_ViewTimeline" ) % locals()
-		optionDirectMessage = self.lang.get( "Menu_User_DirectMessage" )
-		optionFollowing = self.lang.get( "MainMenu_Options_Following" )
-		optionFollowers = self.lang.get( "MainMenu_Options_Followers" )
+		optionMention = i18n( "Menu_User_Mention" ) % locals()
+		optionTimeline = i18n( "Menu_User_ViewTimeline" ) % locals()
+		optionDirectMessage = i18n( "Menu_User_DirectMessage" )
+		optionFollowing = i18n( "MainMenu_Options_Following" )
+		optionFollowers = i18n( "MainMenu_Options_Followers" )
 		if listType == self.UsersListType[ "following" ]:
-			header = self.lang.get( "Menu_User_Header_Following" ) % locals()
+			header = i18n( "Menu_User_Header_Following" ) % locals()
 		else:
-			header = self.lang.get( "Menu_User_Header_Follower" ) % locals()
+			header = i18n( "Menu_User_Header_Follower" ) % locals()
 		options = [
 				optionMention
 				, optionTimeline
@@ -589,10 +588,10 @@ class gui:
 		dialog = xbmcgui.Dialog()
 		if listType == self.UsersListType[ "following" ]:
 			users = self.api.GetFriends( userName )
-			header = self.lang.get( "MainMenu_Options_Following" )
+			header = i18n( "MainMenu_Options_Following" )
 		else:
 			users = self.api.GetFollowers( userName )
-			header = self.lang.get( "MainMenu_Options_Followers" )
+			header = i18n( "MainMenu_Options_Followers" )
 		displayList = []
 		for user in users:
 			displayList.append( user.GetScreenName() )
@@ -646,7 +645,7 @@ class gui:
 		Cancel: False
 	"""
 	def tweetManually( self ):
-		keyboard = xbmc.Keyboard( "", self.lang.get( "Tweet_EnterStatus" ) )
+		keyboard = xbmc.Keyboard( "", i18n( "Tweet_EnterStatus" ) )
 		while True:
 			keyboard.doModal()
 			if keyboard.isConfirmed():
@@ -688,8 +687,8 @@ class gui:
 			song = self.player.getMusicInfoTag()
 		except:
 			return False
-		info = self.lang.get( "TweetMusic_MessageFormat" ) % { "artist" : song.getArtist(), "title" : song.getTitle() }
-		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT, self.lang.get( "Tweet_Automatic_Suffix" ) )
+		info = i18n( "TweetMusic_MessageFormat" ) % { "artist" : song.getArtist(), "title" : song.getTitle() }
+		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT, i18n( "Tweet_Automatic_Suffix" ) )
 		return self.tweet( message )
 
 	"""
@@ -706,8 +705,8 @@ class gui:
 		title = video.getTitle()
 		if title == "":
 			title = act.parseTitleFromFilename( self.player.getPlayingFile() )
-		info = self.lang.get( "TweetVideo_MessageFormat" ).encode( "utf_8" ) % { "title" : title }
-		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT, self.lang.get( "Tweet_Automatic_Suffix" ) )
+		info = i18n( "TweetVideo_MessageFormat" ).encode( "utf_8" ) % { "title" : title }
+		message = act.appendFooterToStatus( info, twitter.CHARACTER_LIMIT, i18n( "Tweet_Automatic_Suffix" ) )
 		return self.tweet( message )
 
 	"""
@@ -716,7 +715,7 @@ class gui:
 		This is the default view on the Twitter.com home page.
 	"""
 	def viewFriendsTimeline( self ):
-		header = self.lang.get( "FriendsTimeline_Header" )
+		header = i18n( "FriendsTimeline_Header" )
 		statuses = self.api.GetFriendsTimeline()
 		self.viewTimeline( header, statuses )
 
@@ -733,8 +732,8 @@ class gui:
 			userName = status.GetUser().GetScreenName()
 			text = act.stripNewlines( status.GetText() )
 			created = time.localtime( status.GetCreatedAtInSeconds() )
-			timestamp = time.strftime( self.lang.get( "TimestampFormat" ), created )
-			displayList.append( self.lang.get( "FriendsTimeline_StatusFormat" ) % locals() )
+			timestamp = time.strftime( i18n( "TimestampFormat" ), created )
+			displayList.append( i18n( "FriendsTimeline_StatusFormat" ) % locals() )
 		while True:
 			dialog = xbmcgui.Dialog()
 			choice = dialog.select( header, displayList )
@@ -752,7 +751,7 @@ class gui:
 	"""
 	def viewUserTimeline( self, user ):
 		userName = user.GetScreenName()
-		header = self.lang.get( "UserTimeline_Header_Format" ) % locals()
+		header = i18n( "UserTimeline_Header_Format" ) % locals()
 		try:
 			statuses = self.api.GetUserTimeline( user.GetScreenName() )
 		except urllib2.HTTPError, e:

@@ -23,6 +23,7 @@ import sys
 sys.path.append( os.path.join( os.getcwd(), "python-twitter-0.6" ) )
 #Project modules
 import gui
+import lang
 
 #Script constants
 __author__ = "asylumfunk"
@@ -30,6 +31,9 @@ __author_url__ = "https://github.com/asylumfunk"
 __scriptname__ = "xTweet"
 __url__ = "https://github.com/asylumfunk/xbmc-xtweet"
 __version__ = "1.3"
+
+_lang = lang.lang()
+i18n = _lang.get
 
 #Only start the gui if this module is executed directly
 if __name__ == "__main__":
