@@ -19,6 +19,7 @@
 #Standard modules
 import sys
 import time
+import urllib2
 #Third-party modules
 import twitter
 import xbmc
@@ -152,6 +153,16 @@ class gui:
 		dialog = xbmcgui.Dialog()
 		dialog.ok( self.lang.get( "Warning" ), self.lang.get( "Tweet_Alert_TooLong_Text" ) %
 																				{ "maxLength" : twitter.CHARACTER_LIMIT } )
+
+	"""
+	Description:
+		Alerts the user that the requested user timeline is protected
+	"""
+	def alertTimelineProtected( self, user ):
+		dialog = xbmcgui.Dialog()
+		dialog.ok( self.lang.get( "UserTimeline_Protected_Header_Format" ) % { 'userName' : user.GetScreenName() },
+					self.lang.get( "UserTimeline_Protected_Line1" ),
+					self.lang.get( "UserTimeline_Protected_Line2" ) )
 
 	"""
 	Description:
@@ -543,15 +554,11 @@ class gui:
 		optionDirectMessage = self.lang.get( "Menu_User_DirectMessage" )
 		if listType == self.UsersListType[ "following" ]:
 			header = self.lang.get( "Menu_User_Header_Following" ) % locals()
-			options = [
-				optionMention
-				, optionTimeline
-				, optionDirectMessage
-			]
 		else:
 			header = self.lang.get( "Menu_User_Header_Follower" ) % locals()
-			options = [
+		options = [
 				optionMention
+				, optionTimeline
 				, optionDirectMessage
 			]
 		dialog = xbmcgui.Dialog()
@@ -701,6 +708,13 @@ class gui:
 		statuses = self.api.GetFriendsTimeline()
 		self.viewTimeline( header, statuses )
 
+	"""
+	Description:
+		Displays a generic timeline of statuses
+	Args:
+		header::string - text to be used as the dialog's header
+		statuses::twitter.Status[] - statuses to be displayed
+	"""
 	def viewTimeline( self, header, statuses ):
 		displayList = []
 		for status in statuses:
@@ -717,8 +731,22 @@ class gui:
 			else:
 				self.reply( statuses[ choice ] )
 
+	"""
+	Description:
+		Displays the specified user's timeline
+		Alerts the user if the timeline is protected.
+	Args:
+		user::twitter.User - the user in question
+	"""
 	def viewUserTimeline( self, user ):
 		userName = user.GetScreenName()
 		header = self.lang.get( "UserTimeline_Header_Format" ) % locals()
-		statuses = self.api.GetUserTimeline( user.GetScreenName() )
-		self.viewTimeline( header, statuses )
+		try:
+			statuses = self.api.GetUserTimeline( user.GetScreenName() )
+		except urllib2.HTTPError, e:
+			if e.code == 401:
+				self.alertTimelineProtected( user )
+			else:
+				raise
+		else:
+			self.viewTimeline( header, statuses )

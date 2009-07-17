@@ -57,5 +57,8 @@
 	<string key="TweetMusic_MessageFormat">Hoere gerade %(artist)s - %(title)s</string>
 	<string key="TweetVideo_MessageFormat">Schaue gerade %(title)s</string>
 	<string key="UserTimeline_Header_Format">%(userName)s's Timeline</string>
+	<string key="UserTimeline_Protected_Header_Format">Protected Timeline: %(userName)s</string>
+	<string key="UserTimeline_Protected_Line1">This user has protected their updates.</string>
+	<string key="UserTimeline_Protected_Line2">Only followers may view their timeline.</string>
 	<string key="Warning">Warnung</string>
 </strings>
