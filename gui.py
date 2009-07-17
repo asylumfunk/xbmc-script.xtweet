@@ -556,6 +556,8 @@ class gui:
 		optionMention = self.lang.get( "Menu_User_Mention" ) % locals()
 		optionTimeline = self.lang.get( "Menu_User_ViewTimeline" ) % locals()
 		optionDirectMessage = self.lang.get( "Menu_User_DirectMessage" )
+		optionFollowing = self.lang.get( "MainMenu_Options_Following" )
+		optionFollowers = self.lang.get( "MainMenu_Options_Followers" )
 		if listType == self.UsersListType[ "following" ]:
 			header = self.lang.get( "Menu_User_Header_Following" ) % locals()
 		else:
@@ -563,6 +565,8 @@ class gui:
 		options = [
 				optionMention
 				, optionTimeline
+				, optionFollowing
+				, optionFollowers
 				, optionDirectMessage
 			]
 		dialog = xbmcgui.Dialog()
@@ -576,14 +580,18 @@ class gui:
 					self.viewUserTimeline( user )
 				elif options[ choice ] == optionDirectMessage:
 					self.sendDirectMessage( user.GetScreenName() )
+				elif options[ choice ] == optionFollowing:
+					self.showMenu_UsersList( self.UsersListType[ "following" ], user.GetScreenName() )
+				elif options[ choice ] == optionFollowers:
+					self.showMenu_UsersList( self.UsersListType[ "followers" ], user.GetScreenName() )
 
-	def showMenu_UsersList( self, listType ):
+	def showMenu_UsersList( self, listType = None, userName = None ):
 		dialog = xbmcgui.Dialog()
 		if listType == self.UsersListType[ "following" ]:
-			users = self.api.GetFriends()
+			users = self.api.GetFriends( userName )
 			header = self.lang.get( "MainMenu_Options_Following" )
 		else:
-			users = self.api.GetFollowers()
+			users = self.api.GetFollowers( userName )
 			header = self.lang.get( "MainMenu_Options_Followers" )
 		displayList = []
 		for user in users:

@@ -1585,7 +1585,7 @@ class Api(object):
     self._CheckForTwitterError(data)
     return [User.NewFromJsonDict(x) for x in data]
 
-  def GetFollowers(self, page=None):
+  def GetFollowers(self, user = None, page = None):
     '''Fetch the sequence of twitter.User instances, one for each follower
 
     The twitter.Api instance must be authenticated.
@@ -1595,7 +1595,10 @@ class Api(object):
     '''
     if not self._username:
       raise TwitterError("twitter.Api instance must be authenticated")
-    url = 'http://twitter.com/statuses/followers.json'
+    if user:
+      url = 'http://twitter.com/statuses/followers/%s.json' % user
+    else:
+      url = 'http://twitter.com/statuses/followers.json'
     parameters = {}
     if page:
       parameters['page'] = page
