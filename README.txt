@@ -14,17 +14,18 @@ Use:
 	- When you first run the script, it will ask for your Twitter username and password.
 		- Note: You can always update this later with the "Edit account settings" option on the main menu.
 	- From the main menu, you can...
-		- tweet automatically about the song/video that you have playing
-		- enter a status manually
+		- tweet about the song/video that you have playing
+		- update your status
 		- view your Friends Timeline
+		- view Followers and Following lists
 		- @reply to Tweets
-		- send a Direct Message to another user
+		- send Direct Messages
 		- view the Direct Messages you have sent and received
-		- reply to Direct Messages
+		- reply to and delete Direct Messages
 		- edit your account settings
 
 Coming Soon:
-	- the ability to search Twitter, view friends/followers timelines, and full support for direct messages
+	- the ability to search Twitter
 
 Support:
 	- @asylumfunk
