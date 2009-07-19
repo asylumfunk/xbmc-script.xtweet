@@ -14,29 +14,33 @@
 #You may obtain a copy of this license at:
 #  http://www.gnu.org/licenses/gpl-3.0.html
 
- #xTweet, an XBMC script to interface with Twitter
-
 #Standard modules
-import os
-import sys
-#Third-party modules
-sys.path.append( os.path.join( os.getcwd(), "python-twitter-0.6" ) )
-#Project modules
-import config
-import gui
-import lang
+import base64
 
-#Script constants
-__author__ = "asylumfunk"
-__author_url__ = "https://github.com/asylumfunk"
-__scriptname__ = "xTweet"
-__url__ = "https://github.com/asylumfunk/xbmc-xtweet"
-__version__ = "1.3"
+"""
+Description:
+	Decodes a Base64 string
+Args:
+	text::string - a Base64 encoded string
+Returns:
+	string - decoded representation of the Base64 string
+"""
+def de( text ):
+	if text:
+		return base64.b64decode( text )
+	else:
+		return text
 
-cfg = config.Config()
-i18n = lang.lang().get
-
-#Only start the gui if this module is executed directly
-if __name__ == "__main__":
-	ui = gui.gui()
-	ui.start()
+"""
+Description:
+	Encodes a Base64 string
+Args:
+	text::string - a string
+Returns:
+	string - Base64 representation of the string
+"""
+def en( text ):
+	if text:
+		return base64.b64encode( text )
+	else:
+		return text

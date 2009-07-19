@@ -26,7 +26,8 @@ import xbmc
 import xbmcgui
 #Project modules
 import act
-import config
+import crypt
+from default import cfg
 from default import i18n
 
 class gui:
@@ -39,10 +40,11 @@ class gui:
 		Loads the user's credentials, if they are saved
 	"""
 	def __init__( self ):
-		credentials = config.loadCredentials()
-		self.username = credentials[ 0 ]
-		self.password = credentials[ 1 ]
-		self.api = twitter.Api( username = self.username, password = self.password )
+		username = cfg.get( "auth.username" )
+		password = cfg.get( "auth.password" )
+		password = crypt.de( password )
+		self.api = twitter.Api( username = username, password = password  )
+
 		self.api.SetSource( i18n( "ApplicationName" ) )
 		self.player = player = xbmc.Player()
 		self.menuOptions_Main = [
@@ -170,8 +172,8 @@ class gui:
 		If the user enters both username and password, the information is saved.
 	"""
 	def editCredentials( self ):
-		username = self.username
-		password = self.password
+		username = cfg.get( "auth.username" )
+		password = cfg.get( "auth.password" )
 		while True:
 			username = self.editUsername( username )
 			if username is None:
@@ -398,10 +400,10 @@ class gui:
 		Updates & saves the user's credentials
 	"""
 	def setCredentials( self, username, password ):
-		self.username = username
-		self.password = password
 		self.api.SetCredentials( username, password )
-		config.saveCredentials( username, password )
+		cfg.set( "auth.username", username )
+		cfg.set( "auth.password", crypt.en( password ) )
+		cfg.save()
 
 	"""
 	Description:
@@ -609,9 +611,9 @@ class gui:
 		Displays the main menu
 	"""
 	def start( self ):
-		if self.username is None:
+		if cfg.get( "auth.username" ) is None:
 			self.editCredentials()
-			if self.username is None:
+			if cfg.get( "auth.username" ) is None:
 				print "You must log in."
 				return
 		self.showMenu_Main()

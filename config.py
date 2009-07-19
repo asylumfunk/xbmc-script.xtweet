@@ -18,6 +18,9 @@
 
 #Standard modules
 import os
+import xml.dom.minidom
+#Project modules
+import crypt
 
 About_TagLine = "Half monkey, half zombie, half amazing"
 About_Email = "@asylumfunk"
@@ -25,36 +28,148 @@ About_Url = "https://github.com/asylumfunk"
 ConfigFile = "settings.ini"
 Status_Truncation = "..."
 
-"""
-Description:
-	Reads the user's credentials from the configuration file
-Returns:
-	Success: { USERNAME, PASSWORD }
-	Failure: { None, None }
-"""
-def loadCredentials():
-	try:
-		file = open (os.path.join( os.getcwd(), ConfigFile ), "r" )
-		username = file.readline().strip()
-		password = file.readline().strip()
-	except:
-		username = None
-		password = None
-	return username, password
+class Config:
+	"""Handles project configuration settings"""
 
-"""
-Description:
-	Saves the user's credentials to the configuration file
-Returns:
-	Boolan : success flag
-"""
-def saveCredentials( username, password ):
-	try:
-		file = open( os.path.join( os.getcwd(), ConfigFile ), "w" )
-		file.write( username + "\n" + password )
-	except:
-		file.close()
-		return False
-	else:
-		file.close()
-		return True
+	_DEFAULT_VALUE = ""
+	_FILE_DEFAULT = "settings.default.xml"
+	_FILE_LEGACY_AUTHENTICATION = "settings.ini"
+	_FILE_USER = "settings.user.xml"
+	_KEY_ATTRIBUTE_NAME = "key"
+	_KVP_TAG_NAME = "setting"
+	_ROOT_TAG_NAME = "settings"
+
+	def __init__( self ):
+		fileDefault = os.path.join( os.getcwd(), self._FILE_DEFAULT )
+		fileUser = os.path.join( os.getcwd(), self._FILE_USER )
+		self._settingsDefault = self._parse( fileDefault )
+		self._settingsUser = self._parse( fileUser )
+		self._migrateLegacyAuthentication()
+
+	"""
+	Description:
+		Reads the user's credentials from the configuration file
+	Returns:
+		Success: { USERNAME, PASSWORD }
+		Failure: { None, None }
+	"""
+	def _loadCredentials( self, file ):
+		try:
+			file = open ( file, "r" )
+			username = file.readline().strip()
+			password = file.readline().strip()
+		except:
+			username = None
+			password = None
+		return username, password
+
+	"""
+	Description:
+		Migrates authentication from the legacy system to the current system
+		Removes the legacy file if it exists
+	"""
+	def _migrateLegacyAuthentication( self ):
+		legacyFile = os.path.join( os.getcwd(), self._FILE_LEGACY_AUTHENTICATION )
+		if os.path.isfile( legacyFile ):
+			if not self.get( "auth.username" ):
+				username, password = self._loadCredentials( legacyFile )
+				username = username or ""
+				password = crypt.en( password )
+				self.set( "auth.username", username )
+				self.set( "auth.password", password )
+				self.save()
+			os.remove( legacyFile )
+
+	"""
+	Description:
+		Parses key-value pairs from a configuration file
+	Args:
+		file::string - absolute path of the input file
+	Returns:
+		dictionary - collection of key-value pairs from the input file
+	"""
+	def _parse( self, file ):
+		data = {}
+		if os.path.isfile( file ):
+			try:
+				doc = xml.dom.minidom.parse( file )
+				root = doc.documentElement
+				if ( not root or root.tagName != self._ROOT_TAG_NAME ):
+					print "XML root not found: " + file
+				kvps = root.getElementsByTagName( self._KVP_TAG_NAME )
+				for kvp in kvps:
+					key, value = self._parseKvp( kvp )
+					if key:
+						data[ key ] = value
+				try:
+					doc.unlink()
+				except:
+					print  "Unable to unlink file: " + file
+			except:
+				print "Unable to parse file: " + file
+		else:
+			print "File does not exist: " + file
+		return data
+
+	"""
+	Description:
+		Parses a key-value pair from an XML element node
+	Args:
+		kvp::XMLElementNode - a non-null element node to be parsed
+	Returns:
+		( key::string, value::string ) - the node's key-value data
+	"""
+	def _parseKvp( self, kvp ):
+		value = self._DEFAULT_VALUE
+		key = kvp.getAttribute( self._KEY_ATTRIBUTE_NAME )
+		if key and kvp.hasChildNodes():
+			value = kvp.firstChild.nodeValue
+		return key, value
+
+	"""
+	Description:
+		Retrieves the specified configuration setting
+	Args:
+		key::string - the key of the item to be retrieved
+	Returns:
+		string - value from user-specific settings OR default value OR None
+	"""
+	def get( self, key ):
+		if key in self._settingsUser:
+			return self._settingsUser[ key ]
+		elif key in self._settingsDefault:
+			return self._settingsDefault[ key ]
+		else:
+			return None
+
+	"""
+	Description:
+		Writes the user-specific settings to its XML file
+	"""
+	def save( self ):
+		implementation = xml.dom.minidom.getDOMImplementation()
+		doc = implementation.createDocument( None, self._ROOT_TAG_NAME, None )
+		for key, value in self._settingsUser.iteritems():
+			ele = doc.createElement( self._KVP_TAG_NAME )
+			text = doc.createTextNode( value )
+			ele.setAttribute( self._KEY_ATTRIBUTE_NAME, key )
+			ele.appendChild( text )
+			doc.documentElement.appendChild( ele )
+		try:
+			file = open( os.path.join( os.getcwd(), self._FILE_USER ), "w" )
+			doc.writexml( file, encoding = "utf-8" )
+		finally:
+			file.close()
+
+	"""
+	Description:
+		Sets the user-specific configuration setting
+	Args:
+		key::string - key used to store the configuration setting
+		value::string - the contents of the configuration setting
+	Returns:
+		self
+	"""
+	def set( self, key, value ):
+		self._settingsUser[ key ] = value
+		return self
