@@ -20,6 +20,7 @@
 import os
 #Project modules
 import config
+from default import cfg
 
 """
 Description:
@@ -34,7 +35,8 @@ Returns:
 def appendFooterToStatus( message, maxLength, suffix ):
 	status = message + " " + suffix
 	if len( status ) > maxLength:
-		status = message[ 0 : ( maxLength - len( suffix ) - len( config.Status_Truncation ) - 1 ) ] + config.Status_Truncation + " " + suffix
+		truncator = cfg.get( "status.truncation" )
+		status = message[ 0 : ( maxLength - len( suffix ) - len( truncator ) - 1 ) ] + truncator + " " + suffix
 	return status
 
 """

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<setting key="about.email">@asylumfunk</setting>
+	<setting key="about.tagLine">Half monkey, half zombie, half amazing</setting>
+	<setting key="about.url">https://github.com/asylumfunk</setting>
+	<setting key="status.truncation">...</setting>
+</settings>

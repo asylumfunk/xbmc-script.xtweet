@@ -79,7 +79,7 @@ class gui:
 	"""
 	def about( self ):
 		dialog = xbmcgui.Dialog()
-		dialog.ok( config.About_TagLine, sys.modules[ "__main__" ].__author__, config.About_Url, config.About_Email )
+		dialog.ok( cfg.get( "about.tagLine" ), sys.modules[ "__main__" ].__author__, cfg.get( "about.url" ), cfg.get( "about.email" ) )
 
 	"""
 	Description:
