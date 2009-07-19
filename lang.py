@@ -21,7 +21,7 @@ import xml.dom.minidom
 #Third-party modules
 import xbmc
 
-class lang:
+class Lang:
 	"""Handles all of the user facing text and i18n
 	Public attributes:
 		language::string
