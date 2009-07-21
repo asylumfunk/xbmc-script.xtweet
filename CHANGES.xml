@@ -1,4 +1,16 @@
 <changelog project="xTweet" url="https://github.com/asylumfunk/xbmc-xtweet">
+	<release date="2009/07/17">
+		<version>
+			<major>1</major>
+			<minor>4</minor>
+		</version>
+		<changes>
+			<change type="add">Following and Followers lists</change>
+			<change type="add">@mention a user</change>
+			<change type="add">View timeline for a user</change>
+			<change type="edit">Updated the suffix attached to auto-tweets</change>
+		</changes>
+	</release>
 	<release date="2009/07/09">
 		<version>
 			<major>1</major>
