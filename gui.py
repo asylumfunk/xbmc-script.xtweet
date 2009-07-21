@@ -560,11 +560,11 @@ class gui:
 		optionFollowing = i18n( "MainMenu_Options_Following" )
 		optionFollowers = i18n( "MainMenu_Options_Followers" )
 		options = [
-				optionMention
-				, optionTimeline
+				optionTimeline
+				, optionMention
+				, optionDirectMessage
 				, optionFollowing
 				, optionFollowers
-				, optionDirectMessage
 			]
 		dialog = xbmcgui.Dialog()
 		choice = 0
