@@ -34,7 +34,7 @@
 	<string key="Menu_DirectMessages_Title">Direct Messages</string>
 	<string key="Menu_User_DirectMessage">Send a Direct Message</string>
 	<string key="Menu_User_Header_Following">Following: %(userName)s</string>
-	<string key="Menu_User_Header_Follower">Follower: %(userName)s</string>
+	<string key="Menu_User_Header_Followers">Followers: %(userName)s</string>
 	<string key="Menu_User_Mention">Mention @%(userName)s</string>
 	<string key="Menu_User_ViewTimeline">View %(userName)s's timeline</string>
 	<string key="Message_Alert_DirectMessage_Deleted">The Direct Message has been deleted.</string>
