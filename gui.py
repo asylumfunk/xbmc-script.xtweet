@@ -401,9 +401,7 @@ class gui:
 	"""
 	def setCredentials( self, username, password ):
 		self.api.SetCredentials( username, password )
-		cfg.set( "auth.username", username )
-		cfg.set( "auth.password", crypt.en( password ) )
-		cfg.save()
+		cfg.set( { "auth.username" : username, "auth.password" : crypt.en( password ) } )
 
 	"""
 	Description:

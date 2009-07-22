@@ -69,8 +69,7 @@ class Config:
 				username, password = self._loadCredentials( legacyFile )
 				username = username or ""
 				password = crypt.en( password )
-				self.set( "auth.username", username )
-				self.set( "auth.password", password )
+				self.set( { "auth.username" : username, "auth.password" : password } )
 				self.save()
 			os.remove( legacyFile )
 
@@ -157,13 +156,16 @@ class Config:
 
 	"""
 	Description:
-		Sets the user-specific configuration setting
+		Sets the user-specific configuration settings
+		Writes the settings to file
 	Args:
-		key::string - key used to store the configuration setting
-		value::string - the contents of the configuration setting
+		pairs::Dictionary - key-value pairs of user settings
 	Returns:
 		self
 	"""
-	def set( self, key, value ):
-		self._settingsUser[ key ] = value
+	def set( self, pairs ):
+		if pairs:
+			for key in pairs:
+				self._settingsUser[ key ] = pairs[ key ]
+			self.save()
 		return self
