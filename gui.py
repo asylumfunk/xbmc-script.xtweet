@@ -26,6 +26,7 @@ import xbmc
 import xbmcgui
 #Project modules
 import act
+import auth
 import crypt
 from default import cfg
 from default import i18n
@@ -43,9 +44,8 @@ class gui:
 		username = cfg.get( "auth.username" )
 		password = cfg.get( "auth.password" )
 		password = crypt.de( password )
-		self.api = twitter.Api( username = username, password = password  )
+		self.authentication = auth.Authentication()
 
-		self.api.SetSource( i18n( "ApplicationName" ) )
 		self.player = player = xbmc.Player()
 		self.menuOptions_Main = [
 			i18n( "MainMenu_Options_UpdateManually" )
@@ -168,57 +168,6 @@ class gui:
 
 	"""
 	Description:
-		Prompts the user for their authentication credentials
-		If the user enters both username and password, the information is saved.
-	"""
-	def editCredentials( self ):
-		username = cfg.get( "auth.username" )
-		password = cfg.get( "auth.password" )
-		while True:
-			username = self.editUsername( username )
-			if username is None:
-				return
-			password = self.editPassword()
-			if password is not None:
-				break
-		self.setCredentials( username, password )
-
-	"""
-	Description:
-		Prompts the user for their password
-	Returns:
-		Accept: the user-supplied input
-		Cancel: None
-	"""
-	def editPassword( self ):
-		keyboard = xbmc.Keyboard( "", i18n( "EnterPassword" ), True )
-		keyboard.doModal()
-		if keyboard.isConfirmed():
-			password = keyboard.getText().strip()
-			if password != "":
-				return password
-		return None
-
-	"""
-	Description:
-		Prompts the user for their username
-	Returns:
-		Accept: the user-supplied input
-		Cancel: None
-	"""
-	def editUsername( self, username = None ):
-		if username is None:
-			username = ""
-		keyboard = xbmc.Keyboard( username, i18n( "EnterUsername" ) )
-		keyboard.doModal()
-		if keyboard.isConfirmed():
-			username = keyboard.getText().strip()
-			if username != "":
-				return username
-		return None
-
-	"""
-	Description:
 		Formats the display string for a direct message
 	Args:
 		message::twitter.DirectMessage - the message to be displayed
@@ -271,7 +220,7 @@ class gui:
 								i18n( "DirectMessage_DeletePrompt_Line1" ),
 								i18n( "DirectMessage_DeletePrompt_Line2" ) )
 		if sure:
-			self.api.DestroyDirectMessage( message.GetId() )
+			self.authentication.api.DestroyDirectMessage( message.GetId() )
 			self.alertDirectMessageDeleted()
 		return sure
 
@@ -366,7 +315,7 @@ class gui:
 			if message is not None:
 				break
 		try:
-			self.api.PostDirectMessage( screenName, message )
+			self.authentication.api.PostDirectMessage( screenName, message )
 			self.alertMessageSuccessfullySent()
 			return True
 		except:
@@ -388,20 +337,12 @@ class gui:
 		if message is None:
 				return
 		try:
-			self.api.PostDirectMessage( userName, message )
+			self.authentication.api.PostDirectMessage( userName, message )
 			self.alertMessageSuccessfullySent()
 			return True
 		except:
 			self.alertMessageNotSent()
 			return False
-
-	"""
-	Description:
-		Updates & saves the user's credentials
-	"""
-	def setCredentials( self, username, password ):
-		self.api.SetCredentials( username, password )
-		cfg.set( { "auth.username" : username, "auth.password" : crypt.en( password ) } )
 
 	"""
 	Description:
@@ -442,10 +383,10 @@ class gui:
 		choice = 0
 		while choice >= 0:
 			if messageType == self.DirectMessageType[ 'sent' ]:
-				messages = self.api.GetDirectMessagesSent()
+				messages = self.authentication.api.GetDirectMessagesSent()
 				header = i18n( "DirectMessageListHeader_Sent" )
 			else:
-				messages = self.api.GetDirectMessages()
+				messages = self.authentication.api.GetDirectMessages()
 				header = i18n( "DirectMessageListHeader_Received" )
 			displayList = []
 			for message in messages:
@@ -527,7 +468,7 @@ class gui:
 					elif action == i18n( "MainMenu_Options_DirectMessages" ):
 						self.showMenu_DirectMessages()
 					elif action == i18n( "MainMenu_Options_EditAccount" ):
-						self.editCredentials()
+						self.authentication.authenticate( edit = True )
 					elif action == i18n( "MainMenu_Options_About" ):
 						self.about()
 					elif action == i18n( "MainMenu_Options_Following" ):
@@ -585,10 +526,10 @@ class gui:
 			userName = cfg.get( "auth.username" )
 		dialog = xbmcgui.Dialog()
 		if listType == self.UsersListType[ "following" ]:
-			users = self.api.GetFriends( userName )
+			users = self.authentication.api.GetFriends( userName )
 			header = i18n( "Menu_User_Header_Following" ) % locals()
 		else:
-			users = self.api.GetFollowers( userName )
+			users = self.authentication.api.GetFollowers( userName )
 			header = i18n( "Menu_User_Header_Followers" ) % locals()
 		displayList = []
 		for user in users:
@@ -607,12 +548,11 @@ class gui:
 		Displays the main menu
 	"""
 	def start( self ):
-		if cfg.get( "auth.username" ) is None:
-			self.editCredentials()
-			if cfg.get( "auth.username" ) is None:
-				print "You must log in."
-				return
-		self.showMenu_Main()
+		if self.authentication.authenticate():
+			self.showMenu_Main()
+		else:
+			print "You must log in."
+			return
 
 	"""
 	Description:
@@ -626,7 +566,7 @@ class gui:
 	"""
 	def tweet( self, message ):
 		try:
-			self.api.PostUpdate( message )
+			self.authentication.api.PostUpdate( message )
 			self.alertStatusSuccessfullyUpdated()
 			return True
 		except:
@@ -714,7 +654,7 @@ class gui:
 	"""
 	def viewFriendsTimeline( self ):
 		header = i18n( "FriendsTimeline_Header" )
-		statuses = self.api.GetFriendsTimeline()
+		statuses = self.authentication.api.GetFriendsTimeline()
 		self.viewTimeline( header, statuses )
 
 	"""
@@ -751,7 +691,7 @@ class gui:
 		userName = user.GetScreenName()
 		header = i18n( "UserTimeline_Header_Format" ) % locals()
 		try:
-			statuses = self.api.GetUserTimeline( user.GetScreenName() )
+			statuses = self.authentication.api.GetUserTimeline( user.GetScreenName() )
 		except urllib2.HTTPError, e:
 			if e.code == 401:
 				self.alertTimelineProtected( user )
