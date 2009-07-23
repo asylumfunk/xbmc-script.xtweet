@@ -1900,6 +1900,18 @@ class Api(object):
     '''
     self._default_params['source'] = source
 
+  def VerifyCredentials( self ):
+    '''Verifies user information from Twitter
+
+    Returns:
+      Returns the twitter.User object
+    '''
+    url = 'https://twitter.com/account/verify_credentials.json'
+    json = self._FetchUrl( url, no_cache = True )
+    data = simplejson.loads( json )
+    self._CheckForTwitterError( data )
+    return User.NewFromJsonDict( data )
+
   def _BuildUrl(self, url, path_elements=None, extra_params=None):
     # Break url into consituent parts
     (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)

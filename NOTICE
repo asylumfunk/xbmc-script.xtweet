@@ -5,6 +5,7 @@ This library has been modified in the following ways:
  - removed a call to "os.getlogin()", as it was not supported under Windows
  - added a missing API method: GetDirectMessagesSent(...)
  - added an optional "user" parameter to Api.GetFollowers(...)
+ - added a missing API method: VerifyCredentials(...)
 
 The simplejson library (http://simplejson.googlecode.com) is used under the terms of the MIT license and is copyright Bob Ippolito.  See http://simplejson.googlecode.com/svn/trunk/LICENSE.txt for details.
 
