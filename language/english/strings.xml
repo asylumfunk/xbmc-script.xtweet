@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
+	<string key="alert.invalidUsernamePassword">The username/password combination does not match.</string>
+	<string key="alert.tryAgain">Please try again.</string>
 	<string key="ApplicationName">xTweet</string>
 	<string key="DirectMessage_DeletePrompt_Header">Direct Message: Delete</string>
 	<string key="DirectMessage_DeletePrompt_Line1">Are you sure you want to delete this message?</string>
