@@ -17,11 +17,14 @@
 #Standard modules
 import urllib2
 #Third-party modules
+import oauthtwitter
 import twitter
 import xbmc
+import xbmcgui
 #Project modules
 import alert
 import crypt
+import urlshortener
 from default import cfg
 from default import i18n
 
@@ -32,11 +35,16 @@ Handles API authentication
 """
 class Authentication:
 
+	_consumerKey = "SxuZwDU88Cz3ZKIKXyxjg"#crypt.de( cfg.get( "auth.consumerKey" ) )
+	_consumerSecret = "5nAyrCyUi8w9tvLX2UOdC8ZS1GAhXyoNvgVG0M7zU"#crypt.de( cfg.get( "auth.consumerSecret" ) )
+
 	"""
 	Description:
 		Default constructor
 	"""
 	def __init__( self ):
+		print self._consumerKey
+		print self._consumerSecret
 		self.isAuthenticated = False
 		self.api = None
 
@@ -44,39 +52,47 @@ class Authentication:
 	Description:
 		Performs either Basic or OAuth Authentication, dependent upon user's settings
 	Args:
-		edit::bool - if the user is editing existing credentials
+		editing::bool - if the user is editing existing credentials
 	Returns:
 		True::bool - the user successfully authenticated
 		False::bool - the user did not successfully authenticate
 	"""
-	def authenticate( self, edit = False ):
+	def authenticate( self, editing = False ):
+		print "editing:", editing
 		method = cfg.get( "auth.method" )
-		if method == methods[ "oauth" ]:
-			return self.authenticate_oauth( edit = edit )
+		print "method:", method
+		if not editing and method == methods[ "oauth" ]:
+			print "oauth"
+			self.authenticate_oauth()
 		else:
-			return self.authenticate_basic( edit = edit )
+			print "basic"
+			if self.authenticate_basic( editing = editing ):
+				if editing or not method:
+					if self.promptUseOAuth():
+						self.authenticate_oauth()
+		return self.isAuthenticated
 
 	"""
 	Description:
 		Performs Basic Authentication
 	Args:
-		edit::bool - if the user is editing existing credentials
+		editing::bool - if the user is editing existing credentials
 	Returns:
 		True::bool - the user successfully authenticated
 		False::bool - the user did not successfully authenticate
 	"""
-	def authenticate_basic( self, edit = False ):
+	def authenticate_basic( self, editing ):
 		username, password = self.getUsernameAndPassword()
 		isValid = False
-		if edit or not username or not password:
+		if editing or not username or not password:
 			needsVerified = False
 		else:
 			needsVerified = True
 		while not isValid:
 			if needsVerified:
+				print "up:", username, password
 				api = twitter.Api( username, password )
 				if self.verifyCredentials( api ):
-					self.api = api
 					self.setUsernameAndPassword( username, password )
 					return True
 				else:
@@ -87,14 +103,81 @@ class Authentication:
 			else:
 				needsVerified = True
 
+	"""
+	Description:
+		Performs OAuth Authentication
+	Returns:
+		True::bool - the user successfully authenticated
+		False::bool - the user did not successfully authenticate
+	"""
 	def authenticate_oauth( self ):
-		raise Error( "Not Implemented Yet!" )
+		accessToken = self.getAccessToken()
+		if accessToken:
+			api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken )
+			if self.verifyCredentials( api ):
+				return True
+			else:
+				alert.invalidOAuthPin()
+				if not self.authenticate_basic( editing = True ):
+					return False
+		requestToken, authorizationUrl = self.generateTokenAndUrl()
+		if not self.sendAuthorizationMessage( authorizationUrl ):
+			return False
+		self.displayOAuthInstructions()
+		while True:
+			pin = self.promptPin()
+			if not pin:
+				return False
+			else:
+				accessToken = self.requestAccessToken( requestToken, pin )
+				if accessToken:
+					api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken )
+					if self.verifyCredentials( api ):
+						self.setAccessToken( accessToken )
+						return True
+				alert.invalidOAuthPin()
+
+	"""
+	Description:
+		Displays OAuth instructions
+	"""
+	def displayOAuthInstructions( self ):
+		instructions = xbmcgui.Dialog()
+		return instructions.ok( i18n( "auth.secureLogin.heading" ) , i18n( "auth.secureLogin.instructions.line1" ), i18n( "auth.secureLogin.instructions.line2" ), i18n( "auth.secureLogin.instructions.line3" ) )
+
+	"""
+	Description:
+		Generates an OAuth request token and authorization url
+	Returns:
+		( requestToken::oauthtwitter.oauth.OAuthToken, authorizationUrl::string )
+	"""
+	def generateTokenAndUrl( self ):
+		api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret )
+		requestToken = api.getRequestToken()
+		authorizationUrl = api.getAuthorizationURL( requestToken )
+		return requestToken, authorizationUrl
+
+	"""
+	Description:
+		Retrieves the user's OAuth access token
+	Returns:
+		if the value exists:
+			oauthtwitter.oauth.OAuthToken - the user's OAuth access token
+		else:
+			None
+	"""
+	def getAccessToken( self ):
+		tokenString = crypt.de( cfg.get( "auth.accessToken" ) )
+		if tokenString:
+			return oauthtwitter.oauth.OAuthToken.from_string( tokenString )
+		else:
+			return None
 
 	"""
 	Description:
 		Retrieves the user's current username and password
 	Returns:
-		( username, password ) - a tuple of the user's current username and password
+		( username, password ) - a tuple of the user's current username and password (plain-text)
 	"""
 	def getUsernameAndPassword( self ):
 		username = cfg.get( "auth.username" )
@@ -135,6 +218,32 @@ class Authentication:
 
 	"""
 	Description:
+		Prompts the user to enter their authorization PIN
+	Returns:
+		Accept: str - the PIN
+		Cancel: None
+	"""
+	def promptPin( self ):
+		prompt = xbmcgui.Dialog()
+		ShowAndGetNumber = 0
+		pin = prompt.numeric( ShowAndGetNumber, i18n( "auth.promptPin.heading" ) )
+		if pin:
+			return pin
+		else:
+			return None
+
+	"""
+	Description:
+		Prompts the user to see if they want to use OAuth
+	Returns:
+		bool - whether or not the user wants to use OAuth
+	"""
+	def promptUseOAuth( self ):
+		prompt = xbmcgui.Dialog()
+		return prompt.yesno( i18n( "auth.secureLogin.heading" ), i18n( "auth.secureLogin.prompt.line1" ), i18n( "auth.secureLogin.prompt.line2" ), i18n( "auth.secureLogin.prompt.line3" ) )
+
+	"""
+	Description:
 		Prompts for a username
 	Args:
 		username::string - the user's current username
@@ -164,6 +273,62 @@ class Authentication:
 
 	"""
 	Description:
+		Requests an OAuth access token
+	Args:
+		requestToken::oauthtwitter.oauth.OAuthToken - the user's OAuth request token
+		pin::int - the user's validation PIN
+	Returns:
+		if successful:
+			oauthtwitter.oauth.OAuthToken - the user's OAuth access token
+		else:
+			None
+	"""
+	def requestAccessToken( self, requestToken, pin ):
+		try:
+			api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, requestToken )
+			accessToken = api.getAccessToken( pin )
+			return accessToken
+		except urllib2.HTTPError, e:
+			if e.code == 401:
+				return None
+			else:
+				raise
+
+	"""
+	Description:
+		Sends an authorization message to the user's account
+	Args:
+		authorizationUrl::string - a Twitter.com authorization url
+	"""
+	def sendAuthorizationMessage( self, authorizationUrl ):
+		username = cfg.get( "auth.username" )
+		shortUrl = urlshortener.create( authorizationUrl )
+		if shortUrl:
+			message = i18n( "auth.oauth.sendAuthorizationMessage.messageFormat" ) % { "url" : shortUrl }
+		else:
+			message = authorizationUrl
+		try:
+			self.api.PostDirectMessage( username, message )
+			return True
+		except:
+			alert.oauthMessageNotSent()
+			return False
+
+	"""
+	Description:
+		Sets the user's OAuth access token
+	Args:
+		accessToken::oauthtwitter.oauth.OAuthToken - the user's OAuth access token
+	"""
+	def setAccessToken( self, accessToken ):
+		cfg.set({
+			"auth.accessToken" : crypt.en( str( accessToken ) ),
+			"auth.method" : methods[ "oauth" ],
+			"auth.password" : ""
+		})
+
+	"""
+	Description:
 		Updates the user configuration if values have changed
 	Args:
 		newUsername::string - new username
@@ -182,7 +347,8 @@ class Authentication:
 			cfg.set({
 				"auth.username" : newUsername,
 				"auth.password" : crypt.en( newPassword ),
-				"auth.method" : newMethod
+				"auth.method" : newMethod,
+				"auth.accessToken" : ""
 			})
 			return True
 		else:
@@ -196,16 +362,24 @@ class Authentication:
 	Returns:
 		True::bool - user has access to the account
 		False::bool - user does not have access to the account
+	TODO:
+		add a progress bar while waiting
 	"""
 	def verifyCredentials( self, api ):
+		progress = xbmcgui.DialogProgress()
+		progress.create( i18n( "auth.verifyCredentials.heading" ), i18n( "auth.verifyCredentials.line1" ) )
 		try:
 			user = api.VerifyCredentials()
 			if user and user.GetScreenName():
 				self.isAuthenticated = True
+				self.api = api
+				progress.update( 100 )
 				return True
 		except urllib2.HTTPError, e:
 			if e.code == 401:
 				pass
 			else:
+				progress.update( 100 )
 				raise
+		progress.update( 100 )
 		return False

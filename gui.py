@@ -468,7 +468,7 @@ class gui:
 					elif action == i18n( "MainMenu_Options_DirectMessages" ):
 						self.showMenu_DirectMessages()
 					elif action == i18n( "MainMenu_Options_EditAccount" ):
-						self.authentication.authenticate( edit = True )
+						self.authentication.authenticate( editing = True )
 					elif action == i18n( "MainMenu_Options_About" ):
 						self.about()
 					elif action == i18n( "MainMenu_Options_Following" ):

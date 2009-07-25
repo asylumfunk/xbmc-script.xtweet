@@ -19,6 +19,18 @@ import xbmcgui
 #Project modules
 from default import i18n
 
+def oauthMessageNotSent():
+	dialog = xbmcgui.Dialog()
+	return dialog.ok( i18n( "Warning" ), i18n( "auth.oauth.sendAuthorizationMessage.line1" ), i18n( "auth.oauth.sendAuthorizationMessage.line2" ) )
+
+"""
+Description:
+	Alerts the user that the supplied OAuth PIN is invalid
+"""
+def invalidOAuthPin():
+		dialog = xbmcgui.Dialog()
+		return dialog.ok( i18n( "Warning" ), "The PIN could not be authorized.", "Please try again." )
+
 """
 Description:
 	Alerts the user that the supplied username/password combination is invalid

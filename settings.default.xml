@@ -3,5 +3,8 @@
 	<setting key="about.email">@asylumfunk</setting>
 	<setting key="about.tagLine">Half monkey, half zombie, half amazing</setting>
 	<setting key="about.url">https://github.com/asylumfunk</setting>
+	<setting key="auth.consumerKey">U3h1WndEVTg4Q3ozWktJS1h5eGpn</setting>
+	<setting key="auth.consumerSecret">NW5BeXJDeVVpOHc5dHZMWDJVT2RDOFpTMUdBaFh5b052Z1ZHME03elU=</setting>
 	<setting key="status.truncation">...</setting>
+	<setting key="urlshortner.urlFormat">http://tinyurl.com/api-create.php?%(params)s</setting>
 </settings>
