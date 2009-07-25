@@ -28,8 +28,9 @@ import xbmcgui
 import act
 import auth
 import crypt
-from default import cfg
-from default import i18n
+
+cfg = sys.modules[ "__main__" ].cfg
+i18n = sys.modules[ "__main__" ].i18n
 
 class gui:
 	"""Handles the scripts user interface"""

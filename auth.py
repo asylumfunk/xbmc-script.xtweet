@@ -15,6 +15,7 @@
 #  http://www.gnu.org/licenses/gpl-3.0.html
 
 #Standard modules
+import sys
 import urllib2
 #Third-party modules
 import oauthtwitter
@@ -26,8 +27,9 @@ import alert
 import crypt
 import gui
 import urlshortener
-from default import cfg
-from default import i18n
+
+cfg = sys.modules[ "__main__" ].cfg
+i18n = sys.modules[ "__main__" ].i18n
 
 methods = { "basic" : "basic" , "oauth" : "oauth" }
 

@@ -15,9 +15,10 @@
 #  http://www.gnu.org/licenses/gpl-3.0.html
 
 #Third-party modules
+import sys
 import xbmcgui
-#Project modules
-from default import i18n
+
+i18n = sys.modules[ "__main__" ].i18n
 
 def oauthMessageNotSent():
 	dialog = xbmcgui.Dialog()

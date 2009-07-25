@@ -18,9 +18,11 @@
 
 #Standard modules
 import os
+import sys
 #Project modules
 import config
-from default import cfg
+
+cfg = sys.modules[ "__main__" ].cfg
 
 """
 Description:

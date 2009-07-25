@@ -15,10 +15,11 @@
 #  http://www.gnu.org/licenses/gpl-3.0.html
 
 #Standard modules
+import sys
 import urllib
 import urllib2
-#Project modules
-from default import cfg
+
+cfg = sys.modules[ "__main__" ].cfg
 
 apiUrlFormat = cfg.get( "urlshortner.urlFormat" )
 

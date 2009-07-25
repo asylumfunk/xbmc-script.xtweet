@@ -25,7 +25,6 @@ sys.path.append( os.path.join( os.getcwd(), "oauth-python" ) )
 sys.path.append( os.path.join( os.getcwd(), "oauth-python-twitter" ) )
 #Project modules
 import config
-import gui
 import lang
 
 #Script constants
@@ -34,11 +33,12 @@ __author_url__ = "https://github.com/asylumfunk"
 __scriptname__ = "xTweet"
 __url__ = "https://github.com/asylumfunk/xbmc-xtweet"
 __version__ = "1.4"
-
 cfg = config.Config()
 i18n = lang.Lang().get
 
+
 #Only start the gui if this module is executed directly
 if __name__ == "__main__":
+	import gui
 	ui = gui.gui()
 	ui.start()
