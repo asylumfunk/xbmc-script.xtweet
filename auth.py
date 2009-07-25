@@ -24,6 +24,7 @@ import xbmcgui
 #Project modules
 import alert
 import crypt
+import gui
 import urlshortener
 from default import cfg
 from default import i18n
@@ -180,34 +181,13 @@ class Authentication:
 
 	"""
 	Description:
-		Generic input prompt
-	Args:
-		headerText::string (not None) - the header text to be displayed with the prompt
-		defaultValue::string (not None) - the value used to prepopulate the prompt
-		maskInput::bool (not None) - whether or not input characters should be masked, eg: passwords
-	Returns:
-		string - if user input is non-empty
-		None - prompt is cancelled or input is empty
-	"""
-	def promptInput( self, headerText, defaultValue = "", maskInput = False ):
-		defaultValue = defaultValue or ""
-		keyboard = xbmc.Keyboard( defaultValue, headerText, maskInput )
-		keyboard.doModal()
-		if keyboard.isConfirmed():
-			input = keyboard.getText().strip()
-			if input:
-				return input
-		return None
-
-	"""
-	Description:
 		Prompts for a password
 	Returns:
 		Accept: the user-supplied input
 		Cancel: None
 	"""
 	def promptPassword( self ):
-		return self.promptInput( headerText = i18n( "EnterPassword" ), maskInput = True )
+		return gui.promptInput( headerText = i18n( "EnterPassword" ), maskInput = True )
 
 	"""
 	Description:
@@ -245,7 +225,7 @@ class Authentication:
 		Cancel: None
 	"""
 	def promptUsername( self, username ):
-		return self.promptInput( headerText = i18n( "EnterUsername" ), defaultValue = username )
+		return gui.promptInput( headerText = i18n( "EnterUsername" ), defaultValue = username )
 
 	"""
 	Description:

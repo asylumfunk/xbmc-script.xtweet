@@ -40,6 +40,8 @@
 	<string key="MainMenu_Options_UpdateWithVideo">Tweet ueber dieses Video?</string>
 	<string key="MainMenu_Options_ViewFriendsTimeline">Zeige Udates der Freunde</string>
 	<string key="Mention_Format">@%(userName)s </string>
+	<string key="menu.main.options.mentions">Mentions</string>
+	<string key="menu.main.options.search">Search</string>
 	<string key="Menu_DirectMessages_Compose">Erstellen</string>
 	<string key="Menu_DirectMessages_Inbox">Posteingang</string>
 	<string key="Menu_DirectMessages_Selected_HeaderFormat">Direkte Nachricht: %(message)s</string>
@@ -59,6 +61,8 @@
 	<string key="Message_Alert_NotSent3">und die Internet Verbindung.</string>
 	<string key="Message_Alert_SentSuccessfully">Deine Nachricht wurde erfolgreich versendet.</string>
 	<string key="Message_Alert_TooLong_Text">Deine Nachricht kann %(maxLength)s Zeichen nicht uebersteigen.</string>
+	<string key="search.input.heading">Search:</string>
+	<string key="search.results.heading.format">Search Results: %(searchTerm)s</string>
 	<string key="Server_ConnectionFailed_Line1">Twitter could not be reached.</string>
 	<string key="Server_ConnectionFailed_Line2">Pruefe deine Benutzername/Passwort Kombination</string>
 	<string key="Server_ConnectionFailed_Line3">und deine Internet Verbindung.</string>

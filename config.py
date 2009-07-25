@@ -69,7 +69,11 @@ class Config:
 				username, password = self._loadCredentials( legacyFile )
 				username = username or ""
 				password = crypt.en( password )
-				self.set( { "auth.username" : username, "auth.password" : password } )
+				self.set({
+					"auth.username" : username,
+					"auth.password" : password,
+					"auth.method" : ""
+				})
 				self.save()
 			os.remove( legacyFile )
 

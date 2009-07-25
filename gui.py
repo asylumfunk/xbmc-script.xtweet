@@ -50,8 +50,10 @@ class gui:
 		self.menuOptions_Main = [
 			i18n( "MainMenu_Options_UpdateManually" )
 			, i18n( "MainMenu_Options_ViewFriendsTimeline" )
+			, i18n( "menu.main.options.search" )
 			, i18n( "MainMenu_Options_Following" )
 			, i18n( "MainMenu_Options_Followers" )
+			, i18n( "menu.main.options.mentions" )
 			, i18n( "MainMenu_Options_DirectMessages" )
 			, i18n( "MainMenu_Options_EditAccount" )
 			, i18n( "MainMenu_Options_About" )
@@ -226,6 +228,28 @@ class gui:
 
 	"""
 	Description:
+		Generic input prompt
+	Args:
+		headerText::string (not None) - the header text to be displayed with the prompt
+		defaultValue::string (not None) - the value used to prepopulate the prompt
+		maskInput::bool (not None) - whether or not input characters should be masked, eg: passwords
+	Returns:
+		string - if user input is non-empty
+		None - prompt is cancelled or input is empty
+	"""
+	def promptInput( headerText, defaultValue = "", maskInput = False ):
+		defaultValue = defaultValue or ""
+		keyboard = xbmc.Keyboard( defaultValue, headerText, maskInput )
+		keyboard.doModal()
+		if keyboard.isConfirmed():
+			input = keyboard.getText().strip()
+			if input:
+				return input
+		return None
+	promptInput = staticmethod( promptInput )
+
+	"""
+	Description:
 		Prompts the user to enter a screen name
 	Args:
 		title::string (optional) - title prompt to be displayed
@@ -294,6 +318,19 @@ class gui:
 		else:
 			return self.tweet( message )
 
+	"""
+	Description:
+		Allows the user to perform a search and view matching statuses
+	Args:
+		term::string - term to be searched for
+	"""
+	def search( self, term = None ):
+		if not term:
+			term = gui.promptInput( i18n( "search.input.heading" ) )
+		if term:
+			results = self.authentication.api.Search( term )
+			heading = i18n( "search.results.heading.format" ) % { "searchTerm" : term }
+			return self.viewTimeline( heading, results )
 
 	"""
 	Description:
@@ -343,6 +380,18 @@ class gui:
 		except:
 			self.alertMessageNotSent()
 			return False
+
+	"""
+	Description:
+		Allows the user to perform a search and view matching statuses
+	Args:
+		term::string - term to be searched for
+	"""
+	def showMentions( self, username = None ):
+		if not username:
+			username = cfg.get( "auth.username" )
+		username = "@" + username
+		return self.search( username )
 
 	"""
 	Description:
@@ -475,6 +524,10 @@ class gui:
 						self.showMenu_UsersList( self.UsersListType[ "following" ] )
 					elif action == i18n( "MainMenu_Options_Followers" ):
 						self.showMenu_UsersList( self.UsersListType[ "followers" ] )
+					elif action == i18n( "menu.main.options.search" ):
+						self.search()
+					elif action == i18n( "menu.main.options.mentions" ):
+						self.showMentions()
 					else:
 						break
 				except urllib2.URLError:
