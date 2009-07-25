@@ -1303,6 +1303,64 @@ class Api(object):
     self._input_encoding = input_encoding
     self.SetCredentials(username, password)
 
+  def Search(self, term, since_id=None,
+		  per_page=100, page=1, lang="en", show_user="true", query_users=False):
+    ''' Return twitter search results for a given term.
+
+    Args:
+      term:
+       term to search by.
+      since_id:
+       Returns only public statuses with an ID greater than (that is,
+         more recent than) the specified ID. [Optional]
+      per_page:
+       number of results to return [Optional] default=15
+      page:
+       which page of search results to return
+      lang:
+       language for results [Optional] default english
+      show_user:
+       prefixes screen name in status
+      query_users:
+       If sets to False, then all users only have screen_name and
+       profile_image_url available. If sets to True, all information of users
+       are available, but it uses lots of request quota, one per status.
+    Returns:
+      A sequence of twitter.Status instances, one for each
+      message containing the term
+    '''
+    # Build request parameters
+    parameters = {}
+    if since_id:
+      parameters['since_id'] = since_id
+    if not term:
+      return []
+    parameters['q'] = term
+    print parameters['q']
+    parameters['show_user'] = show_user
+    parameters['lang'] = lang
+    parameters['rpp'] = per_page
+    parameters['page'] = page
+
+    # Make and send requests
+    url = 'http://search.twitter.com/search.json'
+    json = self._FetchUrl(url,  parameters=parameters)
+    data = simplejson.loads(json)
+    self._CheckForTwitterError(data)
+
+    results = []
+    for x in data['results']:
+      temp = Status.NewFromJsonDict(x)
+      if query_users:
+        # Build user object with new request
+        temp.user = self.GetUser(urllib.quote(x['from_user']))
+      else:
+        temp.user = User(screen_name=x['from_user'], profile_image_url=x['profile_image_url'])
+      results.append(temp)
+
+    # Return built list of statuses
+    return results # [Status.NewFromJsonDict(x) for x in data['results']]
+
   def GetPublicTimeline(self, since_id=None):
     '''Fetch the sequnce of public twitter.Status message for all users.
 
