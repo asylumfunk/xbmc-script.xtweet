@@ -35,16 +35,14 @@ Handles API authentication
 """
 class Authentication:
 
-	_consumerKey = "SxuZwDU88Cz3ZKIKXyxjg"#crypt.de( cfg.get( "auth.consumerKey" ) )
-	_consumerSecret = "5nAyrCyUi8w9tvLX2UOdC8ZS1GAhXyoNvgVG0M7zU"#crypt.de( cfg.get( "auth.consumerSecret" ) )
+	_consumerKey = crypt.de( cfg.get( "auth.consumerKey" ) )
+	_consumerSecret = crypt.de( cfg.get( "auth.consumerSecret" ) )
 
 	"""
 	Description:
 		Default constructor
 	"""
 	def __init__( self ):
-		print self._consumerKey
-		print self._consumerSecret
 		self.isAuthenticated = False
 		self.api = None
 
@@ -58,14 +56,10 @@ class Authentication:
 		False::bool - the user did not successfully authenticate
 	"""
 	def authenticate( self, editing = False ):
-		print "editing:", editing
 		method = cfg.get( "auth.method" )
-		print "method:", method
 		if not editing and method == methods[ "oauth" ]:
-			print "oauth"
 			self.authenticate_oauth()
 		else:
-			print "basic"
 			if self.authenticate_basic( editing = editing ):
 				if editing or not method:
 					if self.promptUseOAuth():
@@ -90,7 +84,6 @@ class Authentication:
 			needsVerified = True
 		while not isValid:
 			if needsVerified:
-				print "up:", username, password
 				api = twitter.Api( username, password )
 				if self.verifyCredentials( api ):
 					self.setUsernameAndPassword( username, password )
