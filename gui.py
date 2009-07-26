@@ -251,28 +251,6 @@ class gui:
 
 	"""
 	Description:
-		Prompts the user to enter a screen name
-	Args:
-		title::string (optional) - title prompt to be displayed
-		default::string (optional) - default text to be pre-entered
-		acceptEmpty::bool (optional) - whether or not the prompt should loop if the user enters an empty entry
-	Returns:
-		Accept: the user's input (stripped of surrounding whitespace)
-		Cancel: None
-	"""
-	def promptScreenName( self, title = "", default = "", acceptEmpty = False ):
-		keyboard = xbmc.Keyboard( default, title )
-		while True:
-			keyboard.doModal()
-			if keyboard.isConfirmed():
-				name = keyboard.getText().strip()
-				if name != "" or acceptEmpty:
-					return name
-			else:
-				return None
-
-	"""
-	Description:
 		Prompts the user to enter a message
 		Alerts and loops if the message is too long
 	Args:
@@ -345,7 +323,7 @@ class gui:
 		screenName = ""
 		message = ""
 		while True:
-			screenName = self.promptScreenName( i18n( "DirectMessage_Send_EnterUsername" ), screenName )
+			screenName = self.promptInput( i18n( "DirectMessage_Send_EnterUsername" ), screenName )
 			if screenName is None:
 				return None
 			message = self.promptMessage( i18n( "DirectMessage_Send_EnterMessage" ) %
