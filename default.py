@@ -33,9 +33,9 @@ __author_url__ = "https://github.com/asylumfunk"
 __scriptname__ = "xTweet"
 __url__ = "https://github.com/asylumfunk/xbmc-xtweet"
 __version__ = "1.4"
+
 cfg = config.Config()
 i18n = lang.Lang().get
-
 
 #Only start the gui if this module is executed directly
 if __name__ == "__main__":

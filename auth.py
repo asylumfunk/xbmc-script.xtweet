@@ -189,7 +189,7 @@ class Authentication:
 		Cancel: None
 	"""
 	def promptPassword( self ):
-		return gui.promptInput( headerText = i18n( "EnterPassword" ), maskInput = True )
+		return gui.gui.promptInput( headerText = i18n( "EnterPassword" ), maskInput = True )
 
 	"""
 	Description:
@@ -227,7 +227,7 @@ class Authentication:
 		Cancel: None
 	"""
 	def promptUsername( self, username ):
-		return gui.promptInput( headerText = i18n( "EnterUsername" ), defaultValue = username )
+		return gui.gui.promptInput( headerText = i18n( "EnterUsername" ), defaultValue = username )
 
 	"""
 	Description:
