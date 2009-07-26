@@ -337,8 +337,6 @@ class Authentication:
 	Returns:
 		True::bool - user has access to the account
 		False::bool - user does not have access to the account
-	TODO:
-		add a progress bar while waiting
 	"""
 	def verifyCredentials( self, api ):
 		progress = xbmcgui.DialogProgress()
