@@ -19,10 +19,18 @@
 #Standard modules
 import os
 import sys
+import time
 #Project modules
 import config
 
 cfg = sys.modules[ "__main__" ].cfg
+i18n = sys.modules[ "__main__" ].i18n
+
+"""Represents a type of direct message"""
+DirectMessageType = {
+	"sent" : 1,
+	"received" : 2
+}
 
 """
 Description:
@@ -40,6 +48,27 @@ def appendFooterToStatus( message, maxLength, suffix ):
 		truncator = cfg.get( "status.truncation" )
 		status = message[ 0 : ( maxLength - len( suffix ) - len( truncator ) - 1 ) ] + truncator + " " + suffix
 	return status
+
+"""
+Description:
+	Formats the display string for a direct message
+Args:
+	message::twitter.DirectMessage - the message to be displayed
+	messageType::DirectMessageType - "sent" or "received"
+Returns:
+	string - the properly formatted direct message string
+"""
+def formatDirectMessageDisplay( message, messageType ):
+	if messageType == DirectMessageType[ 'sent' ]:
+		userName = message.GetRecipientScreenName()
+		format = i18n( "DirectMessageDisplayFormat_Sent" )
+	else:
+		userName = message.GetSenderScreenName()
+		format = i18n( "DirectMessageDisplayFormat_Received" )
+	text = stripNewlines( message.GetText() )
+	created = time.localtime( message.GetCreatedAtInSeconds() )
+	timestamp = time.strftime( i18n( "TimestampFormat" ), created )
+	return format % locals()
 
 """
 Description:

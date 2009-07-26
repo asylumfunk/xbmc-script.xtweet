@@ -43,7 +43,6 @@ class gui:
 	"""
 	def __init__( self ):
 		self.authentication = auth.Authentication()
-
 		self.player = player = xbmc.Player()
 		self.menuOptions_Main = [
 			i18n( "MainMenu_Options_UpdateManually" )
@@ -62,10 +61,6 @@ class gui:
 			, i18n( "Menu_DirectMessages_Inbox" )
 			, i18n( "Menu_DirectMessages_Sent" )
 		]
-		self.DirectMessageType = {
-			"sent" : 1,
-			"received" : 2
-		}
 		self.UsersListType = {
 			"following" : 1,
 			"followers" : 2
@@ -80,27 +75,6 @@ class gui:
 	def about( self ):
 		dialog = xbmcgui.Dialog()
 		dialog.ok( cfg.get( "about.tagLine" ), sys.modules[ "__main__" ].__author__, cfg.get( "about.url" ), cfg.get( "about.email" ) )
-
-	"""
-	Description:
-		Formats the display string for a direct message
-	Args:
-		message::twitter.DirectMessage - the message to be displayed
-		messageType::self.DirectMessageType - "sent" or "received"
-	Returns:
-		string - the properly formatted direct message string
-	"""
-	def formatDirectMessageDisplay( self, message, messageType ):
-		if messageType == self.DirectMessageType[ 'sent' ]:
-			userName = message.GetRecipientScreenName()
-			format = i18n( "DirectMessageDisplayFormat_Sent" )
-		else:
-			userName = message.GetSenderScreenName()
-			format = i18n( "DirectMessageDisplayFormat_Received" )
-		text = act.stripNewlines( message.GetText() )
-		created = time.localtime( message.GetCreatedAtInSeconds() )
-		timestamp = time.strftime( i18n( "TimestampFormat" ), created )
-		return format % locals()
 
 	"""
 	Description:
@@ -287,19 +261,19 @@ class gui:
 		- Displays the user's Direct Message inbox
 	"""
 	def showMenu_DirectMessages_Inbox( self ):
-		self.showMenu_DirectMessages_List( self.DirectMessageType[ 'received' ] )
+		self.showMenu_DirectMessages_List( act.DirectMessageType[ 'received' ] )
 
 	"""
 	Description:
 		- Displays a list of Direct Messages
 	Args:
-		messageType::self.DirectMessageType - "sent" or "received"
+		messageType::act.DirectMessageType - "sent" or "received"
 	"""
 	def showMenu_DirectMessages_List( self, messageType ):
 		dialog = xbmcgui.Dialog()
 		choice = 0
 		while choice >= 0:
-			if messageType == self.DirectMessageType[ 'sent' ]:
+			if messageType == act.DirectMessageType[ 'sent' ]:
 				messages = self.authentication.api.GetDirectMessagesSent()
 				header = i18n( "DirectMessageListHeader_Sent" )
 			else:
@@ -307,7 +281,7 @@ class gui:
 				header = i18n( "DirectMessageListHeader_Received" )
 			displayList = []
 			for message in messages:
-				display = self.formatDirectMessageDisplay( message, messageType )
+				display = act.formatDirectMessageDisplay( message, messageType )
 				displayList.append( display )
 			choice = dialog.select( header, displayList )
 			if choice < 0 or choice >= len( messages ):
@@ -320,10 +294,10 @@ class gui:
 		 - Displays options that can be performed on a Direct Message
 	Args:
 		message::twitter.DirectMessage - currently selected message
-		messageType::self.DirectMessageType - "sent" or "received"
+		messageType::act.DirectMessageType - "sent" or "received"
 	"""
 	def showMenu_DirectMessages_Selected( self, message, messageType ):
-		if messageType == self.DirectMessageType[ 'sent' ]:
+		if messageType == act.DirectMessageType[ 'sent' ]:
 			replyTo = message.GetRecipientScreenName()
 		else:
 			replyTo = message.GetSenderScreenName()
@@ -332,7 +306,7 @@ class gui:
 			i18n( "Menu_DirectMessages_Selected_Delete" )
 		]
 		header = i18n( "Menu_DirectMessages_Selected_HeaderFormat" ) % \
-											{ "message" : self.formatDirectMessageDisplay( message, messageType ) }
+											{ "message" : act.formatDirectMessageDisplay( message, messageType ) }
 		dialog = xbmcgui.Dialog()
 		choice = 0
 		while choice >= 0:
@@ -350,7 +324,7 @@ class gui:
 		 - Displays the user's Direct Message outbox
 	"""
 	def showMenu_DirectMessages_Sent( self ):
-		self.showMenu_DirectMessages_List( self.DirectMessageType[ 'sent' ] )
+		self.showMenu_DirectMessages_List( act.DirectMessageType[ 'sent' ] )
 
 	"""
 	Description:
@@ -493,7 +467,6 @@ class gui:
 		except:
 			alert.serverConnectionFailed()
 			return False
-		#todo: actually confirm
 
 	"""
 	Description:
@@ -524,8 +497,6 @@ class gui:
 		Silently returns if user isn't playing any media
 	Returns:
 		Boolean result flag
-	TODO:
-		disable this option if user isn't playing any media
 	"""
 	def tweetWhatImDoing( self ):
 		if self.player.isPlayingAudio():
