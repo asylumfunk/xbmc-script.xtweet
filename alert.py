@@ -20,22 +20,36 @@ import xbmcgui
 
 i18n = sys.modules[ "__main__" ].i18n
 
-def oauthMessageNotSent():
+"""
+Description:
+	Displays a generic OK prompt
+Args:
+	heading::string - heading text (optional)
+	line1::string - first line of display text (optional)
+	line2::string - second line of display text (optional)
+	line3::string - third line of display text (optional)
+"""
+def _ok( heading = "", line1 = "", line2 = "", line3 = "" ):
 	dialog = xbmcgui.Dialog()
-	return dialog.ok( i18n( "Warning" ), i18n( "auth.oauth.sendAuthorizationMessage.line1" ), i18n( "auth.oauth.sendAuthorizationMessage.line2" ) )
+	return dialog.ok( heading, line1, line2, line3 )
 
 """
 Description:
 	Alerts the user that the supplied OAuth PIN is invalid
 """
 def invalidOAuthPin():
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Warning" ), "The PIN could not be authorized.", "Please try again." )
+		return _ok( i18n( "Warning" ), "The PIN could not be authorized.", "Please try again." )
 
 """
 Description:
 	Alerts the user that the supplied username/password combination is invalid
 """
 def invalidUsernamePassword():
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Warning" ), i18n( "alert.invalidUsernamePassword" ), i18n( "alert.tryAgain" ) )
+		return _ok( i18n( "Warning" ), i18n( "alert.invalidUsernamePassword" ), i18n( "alert.tryAgain" ) )
+
+"""
+Description:
+	Alerts the user that the authentication message could not be sent
+"""
+def oauthMessageNotSent():
+	return _ok( i18n( "Warning" ), i18n( "auth.oauth.sendAuthorizationMessage.line1" ), i18n( "auth.oauth.sendAuthorizationMessage.line2" ) )
