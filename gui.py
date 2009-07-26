@@ -86,91 +86,6 @@ class gui:
 
 	"""
 	Description:
-		Alerts the user that the Direct Message has been deleted
-	"""
-	def alertDirectMessageDeleted( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Success" ), i18n( "Message_Alert_DirectMessage_Deleted" ) )
-
-	"""
-	Description:
-		Alerts the user that their message cannot be empty
-	"""
-	def alertMessageEmpty( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Warning" ), i18n( "Message_Alert_Empty_Text" ) )
-
-	"""
-	Description:
-		Alerts the user that their message could not be sent
-	"""
-	def alertMessageNotSent( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Warning" ), i18n( "Message_Alert_NotSent1" ), i18n( "Message_Alert_NotSent2" ), i18n( "Message_Alert_NotSent3" ) )
-
-	"""
-	Description:
-		Alerts the user that their message was successfully sent
-	"""
-	def alertMessageSuccessfullySent( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Success" ), i18n( "Message_Alert_SentSuccessfully" ) )
-
-	"""
-	Description:
-		Alerts the user that their message cannot exceed the maximum length
-	"""
-	def alertMessageTooLong( self ):
-		dialog = xbmcgui.Dialog()
-		return dialog.ok( i18n( "Warning" ), i18n( "Message_Alert_TooLong_Text" ) %
-																							{ "maxLength" : twitter.CHARACTER_LIMIT } )
-
-	"""
-	Description:
-		Alerts the user that Twitter.com could not be reached
-	"""
-	def alertServerConnectionFailed( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( i18n( "Warning" ), i18n( "Server_ConnectionFailed_Line1" ), i18n( "Server_ConnectionFailed_Line2" ), i18n( "Server_ConnectionFailed_Line3" ) )
-
-
-	"""
-	Description:
-		Alerts the user that their status cannot be empty
-	"""
-	def alertStatusEmpty( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( i18n( "Warning" ), i18n( "Tweet_Alert_Empty_Text" ) )
-
-	"""
-	Description:
-		Alerts the user that their status was successfully updated
-	"""
-	def alertStatusSuccessfullyUpdated( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( i18n( "Success" ), i18n( "Tweet_Alert_Success_Text" ) )
-
-	"""
-	Description:
-		Alerts the user that their status cannot exceed the maximum length
-	"""
-	def alertStatusTooLong( self ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( i18n( "Warning" ), i18n( "Tweet_Alert_TooLong_Text" ) %
-																				{ "maxLength" : twitter.CHARACTER_LIMIT } )
-
-	"""
-	Description:
-		Alerts the user that the requested user timeline is protected
-	"""
-	def alertTimelineProtected( self, user ):
-		dialog = xbmcgui.Dialog()
-		dialog.ok( i18n( "UserTimeline_Protected_Header_Format" ) % { 'userName' : user.GetScreenName() },
-					i18n( "UserTimeline_Protected_Line1" ),
-					i18n( "UserTimeline_Protected_Line2" ) )
-
-	"""
-	Description:
 		Formats the display string for a direct message
 	Args:
 		message::twitter.DirectMessage - the message to be displayed
@@ -224,7 +139,7 @@ class gui:
 								i18n( "DirectMessage_DeletePrompt_Line2" ) )
 		if sure:
 			self.authentication.api.DestroyDirectMessage( message.GetId() )
-			self.alertDirectMessageDeleted()
+			alert.directMessageDeleted()
 		return sure
 
 	"""
@@ -271,9 +186,9 @@ class gui:
 					if acceptEmpty:
 						return message
 					else:
-						self.alertMessageEmpty()
+						alert.messageEmpty()
 				elif len( message ) > twitter.CHARACTER_LIMIT:
-					self.alertMessageTooLong()
+					alert.messageTooLong()
 				else:
 					return message
 			else:
@@ -331,10 +246,10 @@ class gui:
 			return
 		try:
 			self.authentication.api.PostDirectMessage( userName, message )
-			self.alertMessageSuccessfullySent()
+			alert.messageSuccessfullySent()
 			return True
 		except:
-			self.alertMessageNotSent()
+			alert.messageNotSent()
 			return False
 
 	"""
@@ -487,7 +402,7 @@ class gui:
 					else:
 						break
 				except urllib2.URLError:
-					self.alertServerConnectionFailed()
+					alert.serverConnectionFailed()
 			if audioIsPlaying or videoIsPlaying:
 				options.pop( 0 )
 
@@ -576,10 +491,10 @@ class gui:
 	def tweet( self, message ):
 		try:
 			self.authentication.api.PostUpdate( message )
-			self.alertStatusSuccessfullyUpdated()
+			alert.statusSuccessfullyUpdated()
 			return True
 		except:
-			self.alertServerConnectionFailed()
+			alert.serverConnectionFailed()
 			return False
 		#todo: actually confirm
 
@@ -598,9 +513,9 @@ class gui:
 			if keyboard.isConfirmed():
 				message = keyboard.getText().strip()
 				if message == "":
-					self.alertStatusEmpty()
+					alert.statusEmpty()
 				elif len( message ) > twitter.CHARACTER_LIMIT:
-					self.alertStatusTooLong()
+					alert.statusTooLong()
 				else:
 					return self.tweet( message )
 			else:
@@ -703,7 +618,7 @@ class gui:
 			statuses = self.authentication.api.GetUserTimeline( user.GetScreenName() )
 		except urllib2.HTTPError, e:
 			if e.code == 401:
-				self.alertTimelineProtected( user )
+				alert.timelineProtected( user )
 			else:
 				raise
 		else:
