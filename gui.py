@@ -313,33 +313,6 @@ class gui:
 
 	"""
 	Description:
-		Prompts the user for a screen name and message
-		Sends the message if both fields are completed
-	Returns:
-		Accept: True
-		Cancel: False
-	"""
-	def sendDirectMessage( self ):
-		screenName = ""
-		message = ""
-		while True:
-			screenName = self.promptInput( i18n( "DirectMessage_Send_EnterUsername" ), screenName )
-			if screenName is None:
-				return None
-			message = self.promptMessage( i18n( "DirectMessage_Send_EnterMessage" ) %
-																				{ 'userName' : screenName } )
-			if message is not None:
-				break
-		try:
-			self.authentication.api.PostDirectMessage( screenName, message )
-			self.alertMessageSuccessfullySent()
-			return True
-		except:
-			self.alertMessageNotSent()
-			return False
-
-	"""
-	Description:
 		Prompts the user for a message
 		Sends the message if a non-empty message is entered
 	Args:
@@ -348,10 +321,14 @@ class gui:
 		Accept: True
 		Cancel: False
 	"""
-	def sendDirectMessage( self, userName ):
+	def sendDirectMessage( self, userName = None ):
+		if not userName:
+			userName = self.promptInput( i18n( "DirectMessage_Send_EnterUsername" ) )
+			if not userName:
+				return False
 		message = self.promptMessage( i18n( "DirectMessage_Send_EnterMessage" ) % locals() )
-		if message is None:
-				return
+		if not message:
+			return
 		try:
 			self.authentication.api.PostDirectMessage( userName, message )
 			self.alertMessageSuccessfullySent()
