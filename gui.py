@@ -42,9 +42,6 @@ class gui:
 		Loads the user's credentials, if they are saved
 	"""
 	def __init__( self ):
-		username = cfg.get( "auth.username" )
-		password = cfg.get( "auth.password" )
-		password = crypt.de( password )
 		self.authentication = auth.Authentication()
 
 		self.player = player = xbmc.Player()
