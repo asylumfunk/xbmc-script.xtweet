@@ -28,11 +28,11 @@ SIGNIN_URL = 'http://twitter.com/oauth/authenticate'
 
 
 class OAuthApi(Api):
-    def __init__(self, consumer_key, consumer_secret, access_token=None):
+    def __init__(self, consumer_key, consumer_secret, access_token=None, cacheDirectory=None):
         if access_token:
-            Api.__init__(self,access_token.key, access_token.secret)
+            Api.__init__(self,access_token.key, access_token.secret, cacheDirectory=cacheDirectory)
         else:
-            Api.__init__(self)
+            Api.__init__(self, cacheDirectory=cacheDirectory)
         self._Consumer = oauth.OAuthConsumer(consumer_key, consumer_secret)
         self._signature_method = oauth.OAuthSignatureMethod_HMAC_SHA1()
         self._access_token = access_token

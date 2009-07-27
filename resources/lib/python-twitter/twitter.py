@@ -1285,7 +1285,8 @@ class Api(object):
                username=None,
                password=None,
                input_encoding=None,
-               request_headers=None):
+               request_headers=None,
+               cacheDirectory=None):
     '''Instantiate a new twitter.Api object.
 
     Args:
@@ -1294,7 +1295,7 @@ class Api(object):
       input_encoding: The encoding used to encode input strings. [optional]
       request_header: A dictionary of additional HTTP request headers. [optional]
     '''
-    self._cache = _FileCache()
+    self._cache = _FileCache(cacheDirectory)
     self._urllib = urllib2
     self._cache_timeout = Api.DEFAULT_CACHE_TIMEOUT
     self._InitializeRequestHeaders(request_headers)

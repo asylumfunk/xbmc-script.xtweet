@@ -30,6 +30,7 @@ import urlshortener
 
 cfg = sys.modules[ "__main__" ].cfg
 i18n = sys.modules[ "__main__" ].i18n
+CACHE_DIRECTORY = sys.modules[ "__main__" ].CACHE_DIRECTORY
 
 methods = { "basic" : "basic" , "oauth" : "oauth" }
 
@@ -87,7 +88,7 @@ class Authentication:
 			needsVerified = True
 		while not isValid:
 			if needsVerified:
-				api = twitter.Api( username, password )
+				api = twitter.Api( username, password, cacheDirectory = CACHE_DIRECTORY )
 				if self.verifyCredentials( api ):
 					self.setUsernameAndPassword( username, password )
 					return True
@@ -109,7 +110,7 @@ class Authentication:
 	def authenticate_oauth( self ):
 		accessToken = self.getAccessToken()
 		if accessToken:
-			api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken )
+			api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken, cacheDirectory = CACHE_DIRECTORY )
 			if self.verifyCredentials( api ):
 				return True
 			else:
@@ -127,7 +128,7 @@ class Authentication:
 			else:
 				accessToken = self.requestAccessToken( requestToken, pin )
 				if accessToken:
-					api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken )
+					api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken, cacheDirectory = CACHE_DIRECTORY )
 					if self.verifyCredentials( api ):
 						self.setAccessToken( accessToken )
 						return True
