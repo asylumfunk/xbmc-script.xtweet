@@ -19,13 +19,6 @@
 #Standard modules
 import os
 import sys
-#Third-party modules
-sys.path.append( os.path.join( os.getcwd(), "python-twitter" ) )
-sys.path.append( os.path.join( os.getcwd(), "oauth-python" ) )
-sys.path.append( os.path.join( os.getcwd(), "oauth-python-twitter" ) )
-#Project modules
-import config
-import lang
 
 #Script constants
 __author__ = "asylumfunk"
@@ -33,6 +26,19 @@ __author_url__ = "https://github.com/asylumfunk"
 __scriptname__ = "xTweet"
 __url__ = "https://github.com/asylumfunk/xbmc-xtweet"
 __version__ = "1.4"
+
+RESOURCE_DIRECTORY = os.path.join( os.getcwd().replace( ";", "" ), "resources" )
+CONFIGURATION_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "config" )
+LANGUAGE_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "language" )
+SOURCE_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "lib" )
+sys.path.append( SOURCE_DIRECTORY )
+sys.path.append( os.path.join( SOURCE_DIRECTORY, "python-twitter" ) )
+sys.path.append( os.path.join( SOURCE_DIRECTORY, "oauth-python" ) )
+sys.path.append( os.path.join( SOURCE_DIRECTORY, "oauth-python-twitter" ) )
+
+#Project modules
+import config
+import lang
 
 cfg = config.Config()
 i18n = lang.Lang().get

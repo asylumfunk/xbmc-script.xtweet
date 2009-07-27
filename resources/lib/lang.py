@@ -34,11 +34,9 @@ class Lang:
 		Initializes the strings used for user-facing text
 		Attempts to use the system's language, if available
 		Falls back to English if the native language is unavailable
-	Args:
-		rootDir : string : the script's root directory
 	"""
 	def __init__( self ):
-		self.rootDir = os.getcwd()
+		self.rootDir = sys.modules[ "__main__" ].LANGUAGE_DIRECTORY
 		self.defaultLanguage = "english"
 		self.language = None
 		self.file = None
@@ -136,4 +134,4 @@ class Lang:
 		string : absolute path of the language file
 	"""
 	def theFile( self, language ):
-		return os.path.join( self.rootDir, "language", language, "strings.xml" )
+		return os.path.join( self.rootDir, language, "strings.xml" )

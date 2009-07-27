@@ -18,6 +18,7 @@
 
 #Standard modules
 import os
+import sys
 import xml.dom.minidom
 #Project modules
 import crypt
@@ -34,8 +35,9 @@ class Config:
 	_ROOT_TAG_NAME = "settings"
 
 	def __init__( self ):
-		fileDefault = os.path.join( os.getcwd(), self._FILE_DEFAULT )
-		fileUser = os.path.join( os.getcwd(), self._FILE_USER )
+		directory = sys.modules[ "__main__" ].CONFIGURATION_DIRECTORY
+		fileDefault = os.path.join( directory, self._FILE_DEFAULT )
+		fileUser = os.path.join( directory, self._FILE_USER )
 		self._settingsDefault = self._parse( fileDefault )
 		self._settingsUser = self._parse( fileUser )
 		self._migrateLegacyAuthentication()
