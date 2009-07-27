@@ -20,7 +20,7 @@
 import os
 import sys
 #Third-party modules
-sys.path.append( os.path.join( os.getcwd(), "python-twitter-0.6" ) )
+sys.path.append( os.path.join( os.getcwd(), "python-twitter" ) )
 sys.path.append( os.path.join( os.getcwd(), "oauth-python" ) )
 sys.path.append( os.path.join( os.getcwd(), "oauth-python-twitter" ) )
 #Project modules
