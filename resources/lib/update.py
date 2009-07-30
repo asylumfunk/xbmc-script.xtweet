@@ -351,7 +351,7 @@ class Update:
 		url = str( self._details.get( "downloadUrl", "" ) )
 		if url:
 			file = self._download( url )
-			if file and os.path.isfile( file ):
+			if file is not None and os.path.isfile( file ):
 				expectedChecksum = self._details.get( "sha1checksum", None )
 				receivedChecksum = self._getSha1Checksum( file )
 				if receivedChecksum and receivedChecksum == expectedChecksum:
