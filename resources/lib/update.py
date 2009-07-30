@@ -207,7 +207,6 @@ class Update:
 	"""
 	Description:
 		Queries for update details
-	TODO: add a progress dialog so the user knows what's going on
 	"""
 	def _checkForUpdate( self ):
 		details = {}
