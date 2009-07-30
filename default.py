@@ -97,8 +97,6 @@ def tryRemoveSvn():
 	if os.path.isdir( svnRoot ):
 		svnResources = os.path.join( RESOURCE_DIRECTORY, ".svn" )
 		if not os.path.isdir( svnResources ):
-			print "removing svn..."
-			#TODO: restore this when tested on unversioned directory
 			shutil.rmtree( svnRoot )
 
 #Only start the gui if this module is executed directly
