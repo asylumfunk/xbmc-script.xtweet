@@ -171,18 +171,21 @@ class Update:
 	"""
 	Description:
 		Queries for update details
-	TODO: include a unique identifier of some kind
 	"""
 	def _checkForUpdate( self ):
-		queryParams = urllib.urlencode( { "currentVersion" : self._currentVersion } )
-		url = self.cfg.get( "update.urlToCheck.format" ) % { "params" : queryParams }
-		request = urllib2.Request( url = url )
+		localUuid = self.cfg.get( "update.uuid" )
+		data = urllib.urlencode( { "currentVersion" : self._currentVersion, "uuid" : localUuid } )
+		url = self.cfg.get( "update.urlToCheck" )
+		request = urllib2.Request( url = url, data = data )
 		try:
 			stream = urllib2.urlopen( request )
 			json = stream.read()
 			details = simplejson.loads( json )
 		except:
 			details = {}
+		serverUuid = str( details.get( "uuid", "" ) )
+		if serverUuid and serverUuid != localUuid:
+			self.cfg.set( { "update.uuid" : serverUuid } )
 		self._details = details
 
 	"""

@@ -7,6 +7,6 @@
 	<setting key="auth.consumerSecret">NW5BeXJDeVVpOHc5dHZMWDJVT2RDOFpTMUdBaFh5b052Z1ZHME03elU=</setting>
 	<setting key="status.truncation">...</setting>
 	<setting key="update.checkForUpdates">true</setting>
-	<setting key="update.urlToCheck.format">https://raw.github.com/asylumfunk/xbmc-xtweet/master/update.json</setting>
+	<setting key="update.urlToCheck">https://raw.github.com/asylumfunk/xbmc-xtweet/master/update.json</setting>
 	<setting key="urlshortner.urlFormat">http://tinyurl.com/api-create.php?%(params)s</setting>
 </settings>
