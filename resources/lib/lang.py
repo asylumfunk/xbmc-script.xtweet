@@ -43,7 +43,7 @@ class Lang:
 		self.strings = { }
 		self.initSupportedLanguage()
 		if self.language is not None:
-			self.load()
+			self.reload()
 
 	"""
 	Description:
@@ -89,7 +89,7 @@ class Lang:
 	TODO:
 		we need an elegant way to bail out if a language file cannot be located (program is unusable)
 	"""
-	def load( self ):
+	def reload( self ):
 		doc = xml.dom.minidom.parse( self.file )
 		root = doc.documentElement
 		if ( not root or root.tagName != "strings" ):
