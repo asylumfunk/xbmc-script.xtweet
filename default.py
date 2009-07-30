@@ -107,10 +107,13 @@ if __name__ == "__main__":
 	import config
 	import lang
 	cfg = config.Config()
-	i18n = lang.Lang().get
+	_language = lang.Lang()
+	i18n = _language.get
 	import update
 	u = update.Update()
 	if not u.tryUpdateProject() or not u.requiresRestart():
+		#restart is required if any of the following modules are modified:
+		#default.py, update.py, config.py, lang.py, simplejson
 		print "booting..."
 		#import gui
 		#ui = gui.gui()
