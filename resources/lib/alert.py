@@ -94,7 +94,7 @@ def oauthMessageNotSent():
 Description:
 	Alerts the user that Twitter.com could not be reached
 """
-def serverConnectionFailed( self ):
+def serverConnectionFailed():
 	return _ok( i18n( "Warning" ), i18n( "Server_ConnectionFailed_Line1" ), i18n( "Server_ConnectionFailed_Line2" ), i18n( "Server_ConnectionFailed_Line3" ) )
 
 """
