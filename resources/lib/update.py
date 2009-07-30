@@ -336,7 +336,6 @@ class Update:
 		Attempts to update the project
 	Returns:
 		boolean success flag
-	TODO: remove logical short-circuits
 	"""
 	def _update( self ):
 		url = str( self._details.get( "downloadUrl", "" ) )
@@ -345,9 +344,9 @@ class Update:
 			if file and os.path.isfile( file ):
 				expectedChecksum = self._details.get( "sha1checksum", None )
 				receivedChecksum = self._getSha1Checksum( file )
-				if True or receivedChecksum and receivedChecksum == expectedChecksum:
+				if receivedChecksum and receivedChecksum == expectedChecksum:
 					scriptDirectory = os.path.join( sys.modules[ "__main__" ].PROJECT_DIRECTORY, os.pardir )
-					if True or self._extractArchive( file, scriptDirectory ):
+					if self._extractArchive( file, scriptDirectory ):
 						return True
 				else:
 					print "checksum mismatch"
