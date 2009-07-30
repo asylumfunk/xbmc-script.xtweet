@@ -123,6 +123,7 @@ class Update:
 	"""Allows the project to update itself"""
 
 	cfg = sys.modules[ "__main__" ].cfg
+	i18n = sys.modules[ "__main__" ].i18n
 
 	"""
 	Description:
@@ -145,7 +146,6 @@ class Update:
 	"""
 	Descripton:
 		Controls the auto-update flow
-	TODO: i18n
 	"""
 	def tryUpdateProject( self ):
 		if self._shouldCheckForUpdates:
@@ -154,7 +154,10 @@ class Update:
 				if self._doesUserWantToUpdate():
 					if self._update():
 						if self.requiresRestart():
-							self._alert( "update complete", "yayyyy!", "gotta reboot" )
+							self._alert( self.i18n( "update.requiresReboot.heading" ), \
+								self.i18n( "update.requiresReboot.line1" ), \
+								self.i18n( "update.requiresReboot.line2" ),  \
+								self.i18n( "update.requiresReboot.line3" ) )
 						else:
 							self._reloadCfgAndLang()
 						return True
@@ -171,8 +174,10 @@ class Update:
 	"""
 	Description:
 		Queries for update details
+	TODO: add a progress dialog so the user knows what's going on
 	"""
 	def _checkForUpdate( self ):
+		details = {}
 		localUuid = self.cfg.get( "update.uuid" )
 		data = urllib.urlencode( { "currentVersion" : self._currentVersion, "uuid" : localUuid } )
 		url = self.cfg.get( "update.urlToCheck" )
@@ -181,8 +186,12 @@ class Update:
 			stream = urllib2.urlopen( request )
 			json = stream.read()
 			details = simplejson.loads( json )
+			stream.close()
 		except:
-			details = {}
+			try:
+				stream.close()
+			except:
+				pass
 		serverUuid = str( details.get( "uuid", "" ) )
 		if serverUuid and serverUuid != localUuid:
 			self.cfg.set( { "update.uuid" : serverUuid } )
@@ -194,11 +203,12 @@ class Update:
 		Assumes that an update exists
 	Returns:
 		boolean flag
-	TODO: i18n
 	"""
 	def _doesUserWantToUpdate( self ):
+		version = self._details.get( "latestVersion", "" )
 		prompt = xbmcgui.Dialog()
-		return prompt.yesno( "Update available: verison 1.5", "A new version of xTweet is available.", "Would you like to update?" )
+		return prompt.yesno( self.i18n( "update.prompt.heading.format" ) % { "version" : version }, \
+			self.i18n( "update.prompt.line1" ), self.i18n( "update.prompt.line2" ) )
 
 	"""
 	Description:
@@ -208,9 +218,6 @@ class Update:
 	Returns:
 		Success - str:: - local filename of the downloaded update
 		Failure - None
-	TODO: i18n
-	TODO: make xbmc.sleep(...) time a constant
-	TODO: make urlDeliminator a constant (?)
 	"""
 	def _download( self, url ):
 		try:
@@ -220,11 +227,12 @@ class Update:
 			filename = urlParts[ -1 ]
 			localDirectory= sys.modules[ "__main__" ].UPDATES_DIRECTORY
 			localPath = os.path.join( localDirectory, filename )
-			progressDialog = DownloadProgressDialog( "Updating", "downloading...", urlDirectory, filename )
+			progressDialog = DownloadProgressDialog( self.i18n( "update.download.heading" ), self.i18n( "update.download.line1" ), urlDirectory, filename )
 			download = ThreadedDownload( url, localDirectory, filename, progressDialog )
 			download.start()
 			while download.isAlive():
 				if progressDialog.iscanceled():
+					localPath = None
 					break
 				xbmc.sleep( 500 )
 			progressDialog.close()
@@ -299,7 +307,6 @@ class Update:
 	Returns:
 		boolean success flag
 	TODO: remove logical short-circuits
-	TODO: i18n
 	"""
 	def _update( self ):
 		url = str( self._details.get( "downloadUrl", "" ) )
@@ -318,5 +325,5 @@ class Update:
 				return "download failed"
 		else:
 			print "invalid url"
-		self._alert( "Warning", "The update could not be successfully completed." )
+		self._alert( self.i18n( "Warning" ), self.i18n( "update.downloadFailed" ) )
 		return False

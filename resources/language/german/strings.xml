@@ -75,6 +75,16 @@
 	<string key="Tweet_Automatic_Suffix">on #XBMC Media Center</string>
 	<string key="TweetMusic_MessageFormat">Hoere gerade %(artist)s - %(title)s</string>
 	<string key="TweetVideo_MessageFormat">Schaue gerade %(title)s</string>
+	<string key="update.download.heading">Updating</string>
+	<string key="update.download.line1">downloading...</string>
+	<string key="update.downloadFailed">The update could not be successfully completed.</string>
+	<string key="update.prompt.heading.format">Update available: verison %(version)s</string>
+	<string key="update.prompt.line1">A new version of xTweet is available.</string>
+	<string key="update.prompt.line2">Would you like to update?</string>
+	<string key="update.requiresReboot.heading">Update Completed</string>
+	<string key="update.requiresReboot.line1">The update has successfully completed.</string>
+	<string key="update.requiresReboot.line2">The script must be restarted.</string>
+	<string key="update.requiresReboot.line3">Please reopen the script.</string>
 	<string key="UserTimeline_Header_Format">%(userName)s's Timeline</string>
 	<string key="UserTimeline_Protected_Header_Format">Protected Timeline: %(userName)s</string>
 	<string key="UserTimeline_Protected_Line1">This user has protected their updates.</string>
