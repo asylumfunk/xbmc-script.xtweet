@@ -156,9 +156,7 @@ class Update:
 						if self.requiresRestart():
 							self._alert( "update complete", "yayyyy!", "gotta reboot" )
 						else:
-							pass
-							#reload cfg
-							#reload i18n
+							self._reloadCfgAndLang()
 						return True
 		return False
 
@@ -283,6 +281,14 @@ class Update:
 	"""
 	def _isUpdateAvailable( self ):
 		return self._details.get( "isUpdateAvailable", False )
+
+	"""
+	Description:
+		Reloads the configuration settings and string translations
+	"""
+	def _reloadCfgAndLang( self ):
+		cfg.reload()
+		sys.modules[ "__main__" ]._language.reload()
 
 	"""
 	Description:
