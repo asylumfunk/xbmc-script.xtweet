@@ -120,21 +120,61 @@ class ThreadedDownload( threading.Thread ):
 				pass
 
 class Update:
+	"""Allows the project to update itself"""
 
 	cfg = sys.modules[ "__main__" ].cfg
 
+	"""
+	Description:
+		Default constructor
+	"""
 	def __init__( self ):
 		self._currentVersion = sys.modules[ "__main__" ].__version__
 		self._details = {}
 		self._shouldCheckForUpdates = ( self.cfg.get( "update.checkForUpdates" ) or "True" ).lower() == "true"
 
+	"""
+	Description:
+		Indicates whether or not an update requires a restart
+	Returns:
+		boolean result flag
+	"""
+	def requiresRestart( self ):
+		return self._details.get( "requiresRestart", False )
+
+	"""
+	Descripton:
+		Controls the auto-update flow
+	TODO: i18n
+	"""
 	def tryUpdateProject( self ):
 		if self._shouldCheckForUpdates:
 			self._checkForUpdate()
-			if self._details.get( "isUpdateAvailable", False ):
+			if self._isUpdateAvailable():
 				if self._doesUserWantToUpdate():
-					self._update()
+					if self._update():
+						if self.requiresRestart():
+							self._alert( "update complete", "yayyyy!", "gotta reboot" )
+						else:
+							pass
+							#reload cfg
+							#reload i18n
+						return True
+		return False
 
+	"""
+	Description:
+		Displays an alert to the user
+	"""
+	def _alert( self, heading, line1, line2 = "", line3 = "" ):
+		alert = xbmcgui.Dialog()
+		return alert.ok( heading, line1, line2, line3 )
+
+	"""
+	Description:
+		Queries for update details
+	TODO: include a unique identifier of some kind
+	"""
 	def _checkForUpdate( self ):
 		queryParams = urllib.urlencode( { "currentVersion" : self._currentVersion } )
 		url = self.cfg.get( "update.urlToCheck.format" ) % { "params" : queryParams }
@@ -142,12 +182,9 @@ class Update:
 		try:
 			stream = urllib2.urlopen( request )
 			json = stream.read()
-			#json = '{ "isUpdateAvailable" : true, "latestVersion" : "1.5", "downloadUrl" : "https://github.com/asylumfunk/xtweet-svn.tar.gz", "sha1checksum" : "2a8163e5c1f59722a2daf6b7e2b29678bab9bbfb" }'
 			details = simplejson.loads( json )
 		except:
-			print "exc"
-			json = '{ "isUpdateAvailable" : true, "latestVersion" : "1.5", "downloadUrl" : "https://github.com/asylumfunk/xtweet-svn.tar.gz", "sha1checksum" : "2a8163e5c1f59722a2daf6b7e2b29678bab9bbfb" }'
-			details = simplejson.loads( json )
+			details = {}
 		self._details = details
 
 	"""
@@ -156,6 +193,7 @@ class Update:
 		Assumes that an update exists
 	Returns:
 		boolean flag
+	TODO: i18n
 	"""
 	def _doesUserWantToUpdate( self ):
 		prompt = xbmcgui.Dialog()
@@ -181,14 +219,14 @@ class Update:
 			filename = urlParts[ -1 ]
 			localDirectory= sys.modules[ "__main__" ].UPDATES_DIRECTORY
 			localPath = os.path.join( localDirectory, filename )
-			progress = DownloadProgressDialog( "Updating", "downloading...", urlDirectory, filename )
-			td = ThreadedDownload( url, localDirectory, filename, progress )
-			td.start()
-			while td.isAlive():
-				if progress.iscanceled():
+			progressDialog = DownloadProgressDialog( "Updating", "downloading...", urlDirectory, filename )
+			download = ThreadedDownload( url, localDirectory, filename, progressDialog )
+			download.start()
+			while download.isAlive():
+				if progressDialog.iscanceled():
 					break
 				xbmc.sleep( 500 )
-			progress.close()
+			progressDialog.close()
 		except:
 			localPath = None
 		return localPath
@@ -218,7 +256,7 @@ class Update:
 		Success::str - the file's SHA-1 checksum
 		Failure::None
 	"""
-	def _getShaChecksum( self, filename ):
+	def _getSha1Checksum( self, filename ):
 		try:
 			file = open( filename, "rb" )
 			hash = sha.new()
@@ -237,22 +275,39 @@ class Update:
 			checksum = None
 		return checksum
 
+	"""
+	Description:
+		Indicates whether or not an update is available
+	Returns:
+		boolean result flag
+	"""
+	def _isUpdateAvailable( self ):
+		return self._details.get( "isUpdateAvailable", False )
+
+	"""
+	Description:
+		Attempts to update the project
+	Returns:
+		boolean success flag
+	TODO: remove logical short-circuits
+	TODO: i18n
+	"""
 	def _update( self ):
 		url = str( self._details.get( "downloadUrl", "" ) )
 		if url:
 			file = self._download( url )
 			if file and os.path.isfile( file ):
 				expectedChecksum = self._details.get( "sha1checksum", None )
-				receivedChecksum = self._getShaChecksum( file )
+				receivedChecksum = self._getSha1Checksum( file )
 				if True or receivedChecksum and receivedChecksum == expectedChecksum:
 					scriptDirectory = os.path.join( sys.modules[ "__main__" ].PROJECT_DIRECTORY, os.pardir )
-					#self._extractArchive( file, scriptDirectory )
-					#if requires restart:
-						#tell user we gotta restart
-						#bail
+					if True or self._extractArchive( file, scriptDirectory ):
+						return True
 				else:
 					print "checksum mismatch"
 			else:
-				return "not file"
+				return "download failed"
 		else:
-			print "no url provided"
+			print "invalid url"
+		self._alert( "Warning", "The update could not be successfully completed." )
+		return False

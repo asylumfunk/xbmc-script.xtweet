@@ -110,7 +110,10 @@ if __name__ == "__main__":
 	i18n = lang.Lang().get
 	import update
 	u = update.Update()
-	u.tryUpdateProject()
-	#import gui
-	#ui = gui.gui()
-	#ui.start()
+	if not u.tryUpdateProject() or not u.requiresRestart():
+		print "booting..."
+		#import gui
+		#ui = gui.gui()
+		#ui.start()
+	else:
+		print "restarting..."
