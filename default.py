@@ -112,9 +112,7 @@ if __name__ == "__main__":
 	if not u.tryUpdateProject() or not u.requiresRestart():
 		#restart is required if any of the following modules are modified:
 		#default.py, update.py, config.py, lang.py, simplejson
-		print "booting..."
-		#import gui
-		#ui = gui.gui()
-		#ui.start()
-	else:
-		print "restarting..."
+		#TODO: can we safely refresh the modules?
+		import gui
+		ui = gui.gui()
+		ui.start()
