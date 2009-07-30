@@ -26,6 +26,7 @@ import xbmc
 import xbmcgui
 #Project modules
 import act
+import alert
 import auth
 import crypt
 
