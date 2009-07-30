@@ -41,6 +41,7 @@ class Authentication:
 
 	_consumerKey = crypt.de( cfg.get( "auth.consumerKey" ) )
 	_consumerSecret = crypt.de( cfg.get( "auth.consumerSecret" ) )
+	_shouldVerifiyCredentialsAtStartup = False
 
 	"""
 	Description:
@@ -62,12 +63,12 @@ class Authentication:
 	def authenticate( self, editing = False ):
 		method = cfg.get( "auth.method" )
 		if not editing and method == methods[ "oauth" ]:
-			self.authenticate_oauth()
+			self.authenticate_oauth( editing = editing )
 		else:
 			if self.authenticate_basic( editing = editing ):
 				if editing or not method:
 					if self.promptUseOAuth():
-						self.authenticate_oauth()
+						self.authenticate_oauth( editing = editing )
 		return self.isAuthenticated
 
 	"""
@@ -78,6 +79,7 @@ class Authentication:
 	Returns:
 		True::bool - the user successfully authenticated
 		False::bool - the user did not successfully authenticate
+	TODO: consider moving the "startup" related block to verifyCredentials(...)
 	"""
 	def authenticate_basic( self, editing ):
 		username, password = self.getUsernameAndPassword()
@@ -89,7 +91,11 @@ class Authentication:
 		while not isValid:
 			if needsVerified:
 				api = twitter.Api( username, password, cacheDirectory = CACHE_DIRECTORY )
-				if self.verifyCredentials( api ):
+				if not editing and not self._shouldVerifiyCredentialsAtStartup:
+					self.api = api
+					self.isAuthenticated = True
+					return True
+				elif self.verifyCredentials( api ):
 					self.setUsernameAndPassword( username, password )
 					return True
 				else:
@@ -106,11 +112,16 @@ class Authentication:
 	Returns:
 		True::bool - the user successfully authenticated
 		False::bool - the user did not successfully authenticate
+	TODO: consider moving the "startup" related block to verifyCredentials(...)
 	"""
 	def authenticate_oauth( self ):
 		accessToken = self.getAccessToken()
 		if accessToken:
 			api = oauthtwitter.OAuthApi( self._consumerKey, self._consumerSecret, accessToken, cacheDirectory = CACHE_DIRECTORY )
+			if not editing and not self._shouldVerifiyCredentialsAtStartup:
+				self.api = api
+				self.isAuthenticated = True
+				return True
 			if self.verifyCredentials( api ):
 				return True
 			else:
@@ -319,7 +330,7 @@ class Authentication:
 		newMethod = methods[ "basic" ]
 		if newUsername != oldUsername or \
 		newPassword != oldPassword or \
-		newMethod != methods[ "basic" ]:
+		oldMethod != methods[ "basic" ]:
 			cfg.set({
 				"auth.username" : newUsername,
 				"auth.password" : crypt.en( newPassword ),
