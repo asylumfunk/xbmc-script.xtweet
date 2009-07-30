@@ -34,6 +34,7 @@ CACHE_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "cache" )
 CONFIGURATION_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "config" )
 LANGUAGE_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "language" )
 SOURCE_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "lib" )
+UPDATES_DIRECTORY = os.path.join( RESOURCE_DIRECTORY, "updates" )
 sys.path.append( SOURCE_DIRECTORY )
 sys.path.append( os.path.join( SOURCE_DIRECTORY, "python-twitter" ) )
 sys.path.append( os.path.join( SOURCE_DIRECTORY, "oauth-python" ) )
@@ -96,6 +97,8 @@ def tryRemoveSvn():
 	if os.path.isdir( svnRoot ):
 		svnResources = os.path.join( RESOURCE_DIRECTORY, ".svn" )
 		if not os.path.isdir( svnResources ):
+			print "removing svn..."
+			#TODO: restore this when tested on unversioned directory
 			shutil.rmtree( svnRoot )
 
 #Only start the gui if this module is executed directly
@@ -105,6 +108,9 @@ if __name__ == "__main__":
 	import lang
 	cfg = config.Config()
 	i18n = lang.Lang().get
-	import gui
-	ui = gui.gui()
-	ui.start()
+	import update
+	u = update.Update()
+	u.tryUpdateProject()
+	#import gui
+	#ui = gui.gui()
+	#ui.start()
