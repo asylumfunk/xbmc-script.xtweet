@@ -36,10 +36,9 @@ class Config:
 
 	def __init__( self ):
 		directory = sys.modules[ "__main__" ].CONFIGURATION_DIRECTORY
-		fileDefault = os.path.join( directory, self._FILE_DEFAULT )
-		fileUser = os.path.join( directory, self._FILE_USER )
-		self._settingsDefault = self._parse( fileDefault )
-		self._settingsUser = self._parse( fileUser )
+		self.fileDefault = os.path.join( directory, self._FILE_DEFAULT )
+		self.fileUser = os.path.join( directory, self._FILE_USER )
+		self.reload()
 		self._migrateLegacyAuthentication()
 
 	"""
@@ -140,6 +139,14 @@ class Config:
 			return self._settingsDefault[ key ]
 		else:
 			return None
+
+	"""
+	Description:
+		Reloads the configuration settings
+	"""
+	def reload( self ):
+		self._settingsDefault = self._parse( self.fileDefault )
+		self._settingsUser = self._parse( self.fileUser )
 
 	"""
 	Description:
