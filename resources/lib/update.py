@@ -28,6 +28,7 @@ import xbmcgui
 from twitter import simplejson
 
 FILE_BLOCK_SIZE = 1024
+THREADED_GUI_SLEEP_TIME_IN_MS = 500
 
 class DownloadProgressDialog( xbmcgui.DialogProgress ):
 	"""A progress dialog for file downloads"""
@@ -221,7 +222,7 @@ class Update:
 		while check.isAlive():
 			if progressDialog.iscanceled():
 				break
-			xbmc.sleep( 500 )
+			xbmc.sleep( THREADED_GUI_SLEEP_TIME_IN_MS )
 		details = check.updateDetails
 		progressDialog.close()
 		serverUuid = str( details.get( "uuid", "" ) )
@@ -266,15 +267,24 @@ class Update:
 				if progressDialog.iscanceled():
 					localPath = None
 					break
-				xbmc.sleep( 500 )
+				xbmc.sleep( THREADED_GUI_SLEEP_TIME_IN_MS )
 			progressDialog.close()
 		except:
 			localPath = None
 		return localPath
 
-	def _extractArchive( self, file, destination ):
+	"""
+	Description:
+		Extracts a gzipped tarball
+	Args:
+		file::string - filename of the archive
+		destination::string - absolute path of the destination directory
+	Returns:
+		boolean success flag
+	"""
+	def _extractArchive( self, filename, destination ):
 		try:
-			tarball = tarfile.open( name = file, mode = "r:gz" )
+			tarball = tarfile.open( name = filename, mode = "r:gz" )
 			for tar in tarball:
 				tarball.extract( tar, destination )
 			tarball.close()
