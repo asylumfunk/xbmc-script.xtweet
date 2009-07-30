@@ -120,6 +120,38 @@ class ThreadedDownload( threading.Thread ):
 			except:
 				pass
 
+class ThreadedUpdateCheck( threading.Thread ):
+	"""Checks for updates in a separate thread"""
+
+	"""
+	Description:
+		Default constructor
+	"""
+	def __init__( self, request ):
+		self.updateDetails = {}
+		self.request = request
+		threading.Thread.__init__( self )
+
+	"""
+	Description:
+		Checks for project updates
+	Note:
+		calling thread expects the results to be stored in the "updateDetails" dictionary
+	"""
+	def run( self ):
+		details = {}
+		try:
+			stream = urllib2.urlopen( self.request )
+			json = stream.read()
+			details = simplejson.loads( json )
+			stream.close()
+		except:
+			try:
+				stream.close()
+			except:
+				pass
+		self.updateDetails = details
+
 class Update:
 	"""Allows the project to update itself"""
 
@@ -183,16 +215,16 @@ class Update:
 		data = urllib.urlencode( { "currentVersion" : self._currentVersion, "uuid" : localUuid } )
 		url = self.cfg.get( "update.urlToCheck" )
 		request = urllib2.Request( url = url, data = data )
-		try:
-			stream = urllib2.urlopen( request )
-			json = stream.read()
-			details = simplejson.loads( json )
-			stream.close()
-		except:
-			try:
-				stream.close()
-			except:
-				pass
+		check = ThreadedUpdateCheck( request )
+		progressDialog = xbmcgui.DialogProgress()
+		progressDialog.create( self.i18n( "update.check.heading" ), self.i18n( "update.check.line1" ) )
+		check.start()
+		while check.isAlive():
+			if progressDialog.iscanceled():
+				break
+			xbmc.sleep( 500 )
+		details = check.updateDetails
+		progressDialog.close()
 		serverUuid = str( details.get( "uuid", "" ) )
 		if serverUuid and serverUuid != localUuid:
 			self.cfg.set( { "update.uuid" : serverUuid } )

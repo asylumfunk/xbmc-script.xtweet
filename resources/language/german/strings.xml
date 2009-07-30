@@ -75,6 +75,8 @@
 	<string key="Tweet_Automatic_Suffix">on #XBMC Media Center</string>
 	<string key="TweetMusic_MessageFormat">Hoere gerade %(artist)s - %(title)s</string>
 	<string key="TweetVideo_MessageFormat">Schaue gerade %(title)s</string>
+	<string key="update.check.heading">Check For Updates</string>
+	<string key="update.check.line1">Checking for new updates...</string>
 	<string key="update.download.heading">Updating</string>
 	<string key="update.download.line1">downloading...</string>
 	<string key="update.downloadFailed">The update could not be successfully completed.</string>
