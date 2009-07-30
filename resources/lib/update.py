@@ -18,6 +18,7 @@
 import os
 import sha
 import sys
+import tarfile
 import threading
 import urllib
 import urllib2
@@ -240,10 +241,8 @@ class Update:
 			localPath = None
 		return localPath
 
-	#TODO: abstract to auto-detect compression type
 	def _extractArchive( self, file, destination ):
 		try:
-			import tarfile
 			tarball = tarfile.open( name = file, mode = "r:gz" )
 			for tar in tarball:
 				tarball.extract( tar, destination )
