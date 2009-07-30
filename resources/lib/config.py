@@ -162,7 +162,7 @@ class Config:
 			ele.appendChild( text )
 			doc.documentElement.appendChild( ele )
 		try:
-			file = open( os.path.join( os.getcwd(), self._FILE_USER ), "w" )
+			file = open( self.fileUser , "w" )
 			doc.writexml( file, encoding = "utf-8" )
 		finally:
 			file.close()
