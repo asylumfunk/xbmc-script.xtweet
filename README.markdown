@@ -10,13 +10,15 @@ Interact with Twitter directly from XBMC!
 Installation
 ------------
 - Copy the "xTweet\" directory to the "scripts\" directory
-	inside of your XBMC installation.
+inside of your XBMC installation.
 - Voila!
 
 Use
 ---
-- When you first run the script, it will ask for your Twitter username and password.
-	- Note: You can always update this later with the "Edit account settings" option on the main menu.
+- When you first run the script, it will ask for your
+Twitter username and password.
+	- Note: You can always update this later with the
+	"Edit account settings" option on the main menu.
 - From the main menu, you can...
 	- tweet about the song/video that you have playing
 	- update your status
@@ -42,7 +44,9 @@ Supported Languages (author in parenthesis)
 - English (AsylumFunk)
 - German (pt-1)
 
-If your native language isn't supported yet and you'd like to help out with translation, I'd love to hear from you! My goal is to see xTweet available in as many languages as possible.
+If your native language isn't supported yet and you'd like to help out
+with translation, I'd love to hear from you! My goal is to see xTweet
+available in as many languages as possible.
 
 Additional Credits
 ------------------
