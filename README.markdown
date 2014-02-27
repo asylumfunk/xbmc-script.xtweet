@@ -1,3 +1,18 @@
+WARNING: DEPRECATED
+===================
+
+DO NOT INSTALL
+--------------
+This was originally written to scratch an itch 5 years ago.
+
+Since then, the Twitter and XBMC APIs have matured and as a result,
+this script no longer functions.
+
+I may bring it back up-to-date at some point, but in the interim,
+it sits here merely for posterity.
+
+****************************************
+
 xTweet, v1.3
 =================================================
 
