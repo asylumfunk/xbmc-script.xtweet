@@ -13,7 +13,7 @@ it sits here merely for posterity.
 
 ****************************************
 
-xTweet, v1.3
+xTweet, v1.6
 =================================================
 
 by asylumfunk, https://github.com/asylumfunk

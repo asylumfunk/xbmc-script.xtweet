@@ -33,7 +33,7 @@ __author__ = "asylumfunk"
 __author_url__ = "https://github.com/asylumfunk"
 __scriptname__ = "xTweet"
 __url__ = "https://github.com/asylumfunk/xbmc-xtweet"
-__version__ = "1.4"
+__version__ = "1.6"
 
 cfg = config.Config()
 i18n = lang.Lang().get
