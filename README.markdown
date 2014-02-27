@@ -16,12 +16,6 @@ it sits here merely for posterity.
 xTweet, v1.6
 =================================================
 
-by asylumfunk, https://github.com/asylumfunk
-
-https://github.com/asylumfunk/xbmc-xtweet
-
-Interact with Twitter directly from XBMC!
-
 Installation
 ------------
 - Copy the "xTweet\" directory to the "scripts\" directory
@@ -43,11 +37,10 @@ Twitter username and password.
 	- send Direct Messages
 	- view the Direct Messages you have sent and received
 	- reply to and delete Direct Messages
+	- view @mentions
+	- search
+	- authenticate via OAuth
 	- edit your account settings
-
-Coming Soon
------------
-- the ability to search Twitter
 
 Support
 -------
@@ -67,3 +60,4 @@ Additional Credits
 ------------------
 - The logo for this project was created by noper.
 - Check out the rest of his work at www.noper.ro
+
